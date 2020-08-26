@@ -1,4 +1,4 @@
-export interface FormData {
+export interface IFormData {
   [index: string]: any
 }
 
@@ -8,10 +8,23 @@ type RulesNeed = {
   rules?: RulesType
 }
 
-export interface FormDataRules {
+export interface IFormDataRules {
   field: string,
   name: string,
   tip?: string,
   rules?: RulesType,
   need?: RulesNeed[]
+}
+
+export interface IValidatorRules {
+  isRequired: any,
+  isName: any,
+  isPhone: any,
+  isCode: any,
+  isBankcard: any,
+  isIdcard: any,
+  isAge: any,
+  isWx: any,
+  isMoney: any,
+  isEmail: any
 }

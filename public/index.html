@@ -13,15 +13,16 @@
         name: '梅甜甜',
         age: 18,
         sex: 0,
-        text: '测试'
+        text: '5'
       }
       const rules = [
-        { field: 'name', name: '姓名', rules: []},
-        { field: 'age', name: '年龄', need: [{field: 'nnn', rules: '1'}]},
-        { field: 'sex', name: '性别'},
-        { field: 'text', name: '测试'}
+        // { field: 'name', name: '姓名', rules: 'isName'},
+        // { field: 'age', name: '年龄', need: [{field: 'nnn', rules: '1'}]},
+        // { field: 'sex', name: '性别'},
+        { field: 'text', name: '测试', rules: {'====' : 5}}
       ]
-      v.validate(formData, rules);
+      const { res, msg } = v.validate(formData, rules);
+      console.log(res, msg);
     }
   </script>
 </body>
