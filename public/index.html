@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>校验器测试</title>
+</head>
+<body>
+  <script src="../dist/index.js"></script>
+  <script>
+    window.onload = () => {
+      const formData = {
+        name: '梅甜甜',
+        age: 18,
+        sex: 0,
+        text: '测试'
+      }
+      const rules = [
+        { field: 'name', name: '姓名', rules: []},
+        { field: 'age', name: '年龄', need: [{field: 'nnn', rules: '1'}]},
+        { field: 'sex', name: '性别'},
+        { field: 'text', name: '测试'}
+      ]
+      v.validate(formData, rules);
+    }
+  </script>
+</body>
+</html>
