@@ -121,6 +121,6 @@ const { res, msg } = validator.validate(formData, rules);
 
 ## 结尾
 
-后期会新增自定义校验器。
+后期会新增自定义校验器已经测试用例。
 
 如有问题欢迎提`issue`，感谢使用~。
