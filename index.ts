@@ -11,6 +11,11 @@ class Validator {
     })
     this.validate = validate;
   }
+
+  addRules(key: string, fn: any){
+    // @ts-ignore
+    this[key] = fn;
+  }
 }
 
 export const validator = new Validator(validatorRules);

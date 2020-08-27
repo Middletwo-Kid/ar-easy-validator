@@ -186,13 +186,17 @@ var validate_1 = __importDefault(__webpack_require__(2));
 var Validator = /** @class */ (function () {
     function Validator(validatorRules) {
         var _this = this;
-        // mount the hook
         Object.keys(validatorRules).forEach(function (key) {
             // @ts-ignore
             _this[key] = validatorRules[key];
         });
         this.validate = validate_1.default;
     }
+    Validator.prototype.addRules = function (key, fn) {
+        console.log('addRules');
+        // @ts-ignore
+        this[key] = fn;
+    };
     return Validator;
 }());
 exports.validator = new Validator(validatorRules);

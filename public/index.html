@@ -6,7 +6,7 @@
   <title>校验器测试</title>
 </head>
 <body>
-  <script src="../dist/validator.js"></script>
+  <script src="../dist/validator.min.js"></script>
   <script>
     window.onload = () => {
       const formData = {
@@ -124,11 +124,18 @@
          // text='5', name='姓名' => true "success"
         //  { field: 'text', name: '测试', rules: 'isMoney',  need: [{field: 'name', rules: 'isName'}]},
 
-         { field: 'text', name: '测试', rules: ['isMoney',{'>': 2}, {'<': 100}],  need: [{field: 'age', rules: [{'>': 2}, {'<': 100}]}], tip: '梅甜甜'}
+        //  { field: 'text', name: '测试', rules: ['isMoney',{'>': 2}, {'<': 100}],  need: [{field: 'age', rules: [{'>': 2}, {'<': 100}]}], tip: '梅甜甜'}
       ]
-      console.log(validator);
-      const { res, msg } = validator.validate(formData, rules);
-      console.log(res, msg);
+
+      function CheckUrl(str) {
+        return /^[a-zA-Z0-9_-]{4,16}$/.test(str);
+      }
+      
+      validator.addRules('CheckUrl', CheckUrl);
+      console.log(validator.CheckUrl('caibaojian'));
+      console.log(validator.CheckUrl('ar'));
+      // const { res, msg } = validator.validate(formData, rules);
+      // console.log(res, msg);
     }
   </script>
 </body>
