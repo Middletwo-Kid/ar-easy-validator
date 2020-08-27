@@ -1,4 +1,4 @@
-import { IFormData, IFormDataRules } from './type';
+import { IFormData, IFormDataRules, RulesNeed } from './type';
 import * as validatorRules from './validatorRules';
 const sign = ['>', '>=', '==', '===', '<', '<='];
 
@@ -11,43 +11,41 @@ const isEmpty = (value: any) => {
 
 // 校验函数的参数
 const checkFormAndRules = (formData: IFormData, rules: IFormDataRules[]): boolean => {
-  try {
-    if(!formData || typeof formData != 'object'){
-      throw new Error('表单对象不能为空');
-    }
-    checkRules(rules);
-  } catch (error) {
-    console.error(error);
-    return false;
+  if (!formData || typeof formData != 'object' || JSON.stringify(formData) == "{}") {
+    throw new Error('表单对象不能为空');
   }
+  checkRules(rules);
   return true;
 }
 
 // 校验rules参数
 const checkRules = (rules: IFormDataRules[], isSubRule: boolean = false) => {
-  if(!Array.isArray(rules)) {
-    throw new Error(`${isSubRule? 'need' : 'rules'}校验规则必须为数组`);
-  }
-  for(let i = 0, len = rules.length; i < len; i++){
-    let obj:{[index: string] : any} = rules[i];
-    if(isSubRule && Object.prototype.toString.call(obj) !== '[object Object]' ) {
+  for (let i = 0, len = rules.length; i < len; i++) {
+    let obj: { [index: string]: any } = rules[i];
+    if (isSubRule && Object.prototype.toString.call(obj) !== '[object Object]') {
       throw new Error('need中的每一项必须是对象');
     }
-    if(!('field' in obj) || isEmpty(obj.field)) {
+
+    // 校验field
+    if (!('field' in obj) || isEmpty(obj.field)) {
       throw new Error('缺少 field');
     }
-    if(!isSubRule && (!('name' in obj) || isEmpty(obj.name))) {
+
+    // 校验name
+    if (!isSubRule && (!('name' in obj) || isEmpty(obj.name))) {
       throw new Error('缺少 name');
     }
-    if(isSubRule && !('rules' in obj) ) {
-      throw new Error('need中的每一项必须存在 rules');
+
+    // 校验rules
+    if ('rules' in obj) {
+      if (!Array.isArray(obj['rules']) && typeof (obj['rules']) != 'string' && Object.prototype.toString.call(obj['rules']) !== '[object Object]')
+        throw new Error(`${isSubRule ? 'need' : 'rules'}必须是一个字符串或对象或数组`);
     }
-    if('rules' in obj) {
-      if(!Array.isArray(obj['rules']) && typeof(obj['rules']) !='string' && Object.prototype.toString.call(obj['rules']) !== '[object Object]')
-      throw new Error(`${isSubRule? 'need' : 'rules'}必须是一个字符串或对象或数组`);
-    }
-    if(!isSubRule && ('need' in obj)) {
-      checkRules(obj['need'], true)
+
+    // 如果存在need
+    if (!isSubRule && ('need' in obj)) {
+      if (!Array.isArray(obj['need']) || obj['need'].length === 0) throw new Error('need必须是一个数组，且不能为空');
+      checkRules(obj['need'], true);
     }
   }
   return true;
@@ -57,7 +55,7 @@ const checkRules = (rules: IFormDataRules[], isSubRule: boolean = false) => {
 const setErrorRes = (msg: string = '', name?: string) => {
   return {
     res: false,
-    msg: msg ? msg : `【${name}】为空或格式不对`
+    msg: msg ? msg : `【${name}】格式有误`
   }
 }
 
@@ -67,23 +65,23 @@ const setErrorRes = (msg: string = '', name?: string) => {
  * 2.对象，单个校验；
  * 3.数组，多个校验
  */
- const checkRuleType = (rules: any|any[]) => {
-  if(isEmpty(rules)){
+const checkRuleType = (rules: any | any[]) => {
+  if (isEmpty(rules)) {
     return '';
-  }else if(typeof rules === 'string'){
+  } else if (typeof rules === 'string') {
     return 'string';
-  }else if(Object.prototype.toString.call(rules) === '[object Object]'){
-      return 'object';
-  }else if(Array.isArray(rules)){
-      return 'array'
-  }else {
+  } else if (Object.prototype.toString.call(rules) === '[object Object]') {
+    return 'object';
+  } else if (Array.isArray(rules)) {
+    return 'array'
+  } else {
     return ''
   }
- }
+}
 
 const checkFileByString = (value: string, rules: string = 'isRequired') => {
   try {
-    if(!(rules in commonVaidatorRules)) throw new Error('当前rules值不存在于校验器规则中');
+    if (!(rules in commonVaidatorRules)) throw new Error('当前rules值不存在于校验器规则中');
     else return commonVaidatorRules[rules](value);
   } catch (error) {
     console.error(error);
@@ -91,35 +89,42 @@ const checkFileByString = (value: string, rules: string = 'isRequired') => {
 }
 
 const checkFileByObj = (value: any, rules: any) => {
-   const [key, val] = Object.entries(rules)[0];
-   try {
-      if(!(sign.includes(key))) throw new Error('当前rules值不存在于校验器规则中');
-      else return checkFileBySign(value, key, val);
-    } catch (error) {
-      console.error(error);
-    }
+  const [key, val] = Object.entries(rules)[0];
+  if (!(sign.includes(key))) throw new Error('当前rules值不存在于校验器规则中');
+  else {
+    return checkFileBySign(value, key, val);
+  }
 }
 
 const checkFileBySign = (value: any, key: string, result: any) => {
-  switch(key){
-    case '>' : return Number(value) > Number(result);
-    case '>=' : return Number(value) >= Number(result);
-    case '==' : return value == result;
-    case '===' : return value === result;
-    case '<' : return Number(value) < Number(result);
-    case '<=' : return Number(value) <= Number(result);
+  switch (key) {
+    case '>': return Number(value) > Number(result);
+    case '>=': return Number(value) >= Number(result);
+    case '==': return value == result;
+    case '===': return value === result;
+    case '<': return Number(value) < Number(result);
+    case '<=': return Number(value) <= Number(result);
     default: return true;
   }
 }
 
-const checkFileByArr = (value: any, rules: any) => {
-   
+const checkFileByArr = (value: any, rules: any): any => {
+  for (let i = 0, len = rules.length; i < len; i++) {
+    const rule = rules[i];
+    let flag = true;
+    try {
+      flag = doValidate(value, rule);
+      if (!flag) return false;
+      if(i == len - 1) return true;
+    } catch (error) {
+      console.error(error);
+    }
+  }
 }
 
 const doValidate = (value: any, rules?: any | IFormDataRules[]) => {
   let type = checkRuleType(rules);
-  console.log('type', type);
-  switch(type){
+  switch (type) {
     case 'string': return checkFileByString(value, rules);
     case 'object': return checkFileByObj(value, rules);
     case 'array': return checkFileByArr(value, rules);
@@ -127,31 +132,60 @@ const doValidate = (value: any, rules?: any | IFormDataRules[]) => {
   }
 }
 
+// 校验need中的rules
+const doValidateNeed = (formData: IFormData, need?: any | RulesNeed[]) => {
+  for (let i = 0, len = need.length; i < len; i++) {
+    const currentValue = formData[need[i].field];
+    const rule = need[i].rules;
+    let flag = doValidate(currentValue, rule);
+    if (!flag) return false;
+  }
+  return true;
+}
+
 const validate = (formData: IFormData, rulesArr: IFormDataRules[]) => {
-  if(!checkFormAndRules(formData, rulesArr)) return;
-  for(let i = 0, len = rulesArr.length; i < len; i++){
-    const { field, name, rules, need, tip } = rulesArr[i];
-    console.log(field, name, rules, need, tip);
-    const currentValue = formData[field];
-    let flag = true;
-    // 值为空，且没有need
-    if(isEmpty(currentValue) && !need){
-      console.log('值为空，且没有need');
-      return setErrorRes(tip, name);
-    // 值为空，但有need
-    }else if(isEmpty(currentValue) && need){
-      console.log('值为空，但有need');
-    // 有值，但没有rules
-    }else if(!isEmpty(currentValue) && !rules){
-      console.log('有值，但没有rules');
-      flag = doValidate(currentValue);
-      if(!flag) return setErrorRes(tip, name);
-    // 有值有need, 在判断有无rules
-    }else{
-      console.log('else');
-      flag =(doValidate(currentValue, rules));
-      if(!flag) return setErrorRes(tip, name);
+  if (!checkFormAndRules(formData, rulesArr)) return;
+  try {
+    for (let i = 0, len = rulesArr.length; i < len; i++) {
+      const { field, name, rules, need, tip } = rulesArr[i];
+      const currentValue = formData[field];
+      let flag = true;
+      // 值为空，且没有need
+      if (isEmpty(currentValue) && !need) {
+        return setErrorRes(tip, name);
+        // 值为空，但有need
+      } else if (isEmpty(currentValue) && need) {
+        const t = doValidateNeed(formData, need);
+        if (t) return setErrorRes(tip, name);
+        // 有值，但没有rules,即isRequired
+      } else if (!isEmpty(currentValue) && !rules) {
+        flag = doValidate(currentValue);
+        if (!flag) return setErrorRes(tip, name);
+        // 有值有need, 在判断有无rules
+      } else {
+        let needVaidtate = true;
+        // 是否有need
+        if (need) {
+          // need校验是否通过
+          needVaidtate = doValidateNeed(formData, need);
+          // 如果通过再校验当前的值
+          if (needVaidtate) {
+            flag = doValidate(currentValue, rules);
+            if (!flag) return setErrorRes(tip, name);
+          }
+        } else {
+          flag = doValidate(currentValue, rules);
+          if (!flag) return setErrorRes(tip, name);
+        }
+      }
     }
+    return {
+      res: true,
+      msg: 'success'
+    }
+  } catch (error) {
+    console.error(error);
+    return setErrorRes('校验器出错~');
   }
 }
 

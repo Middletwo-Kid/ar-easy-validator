@@ -3,7 +3,7 @@ export interface IFormData {
 }
 
 type RulesType = string | {[index: string] :any} | any[]
-type RulesNeed = {
+export type RulesNeed = {
   field: string,
   rules?: RulesType
 }

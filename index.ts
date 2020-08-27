@@ -5,7 +5,6 @@ class Validator {
   private validate: any;
 
   constructor(validatorRules: any){
-    // mount the hook
     Object.keys(validatorRules).forEach(key => {
       // @ts-ignore
       this[key] = validatorRules[key]
@@ -14,4 +13,4 @@ class Validator {
   }
 }
 
-export const v = new Validator(validatorRules);
+export const validator = new Validator(validatorRules);

@@ -1,9 +1,13 @@
 const path = require('path');
+const TerserPlugin = require('terser-webpack-plugin');
 module.exports = {
-  entry: './index',
+  entry: {
+    'validator': './index',
+    'validator.min': './index'
+  },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'index.js',
+    filename: '[name].js',
     libraryTarget: 'umd',
     umdNamedDefine: true
   },
@@ -22,5 +26,13 @@ module.exports = {
         loader: "babel-loader"
       }
     ]
+  },
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        include:/\.min\.js$/,
+      }),
+    ],
   }
 }
