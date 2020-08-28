@@ -32,13 +32,13 @@ const formDataRules = [
     { field: 'sex', name: '性别'},
     // age大于15
     { field: 'age', name: '年龄', rules: {'>': 15}},
-    // isStudent必填
-    { field: 'isStudent', name: '是否是学生'},
+    // isStudent必填，可传递提示语
+    { field: 'isStudent', name: '是否是学生', tip: '是否是学生是必填项'},
     // 当isStudent==1时才会去校验job字段
     { field: 'job', name: '工作', need: [{field: 'isStudent', rules: {'==': 0}}]}
 ]
 const { res, msg } = validator.validate(formData, formDataRules);
-console.log('Validator', res, msg);       // Validator false 【性别】格式有误
+console.log(res, msg);       // false 【性别】格式有误
 ```
 
 ## 方法说明
@@ -57,6 +57,7 @@ console.log('Validator', res, msg);       // Validator false 【性别】格式�
 | isEmail    | 邮箱            |
 | validate   | 校验方法        |
 
+代码示例：
 ```js
 const { res1 } = validator.isName('错误的姓名');      // false
 const { res2 } = validator.isPhone('13800138000');   // true
@@ -67,9 +68,7 @@ const { res2 } = validator.isPhone('13800138000');   // true
 ```js
 const { res, msg } = validator.validate(formData, rules);
 ```
-
 `formData`为一个对象，`rules`是校验规则。 校验规则格式如下：
-
 | 参数  | 参数说明         | 是否必填 |
 | ----- | ---------------- | -------- |
 | field | 表单对象对应的键 | 是       |
@@ -77,15 +76,14 @@ const { res, msg } = validator.validate(formData, rules);
 | tip   | 报错提示         | 否       |
 | rules | 校验规则         | 否       |
 | need  | 校验前置条件     | 否       |
-
 ### rules规则说明
-
+rules可支持字符串、对象和数组：
 | 参数类型           | 参数举例                                 |
 | ------------------ | ---------------------------------------- |
 | 字符串（单个校验） | rules: 'isName'                          |
 | 对象（单个校验）   | rules: {'>': 2}                          |
-| 数据（多个校验）   | rules: ['isMoney', {'>': 2}, {'<': 100}] |
-
+|数组（多个校验）   | rules: ['isMoney', {'>': 2}, {'<': 100}] |
+当rules为字符串时， 可传入以下参数：
 | 校验规则名字 | 通过条件   |
 | ------------ | ---------- |
 | isRequired   | 必填       |
@@ -99,7 +97,7 @@ const { res, msg } = validator.validate(formData, rules);
 | isInt        | 整数       |
 | isMoney      | 金额       |
 | isEmail      | 邮箱       |
-
+当rules为对象时， 可传入以下参数：
 | 校验方法 | 通过条件 |
 | -------- | -------- |
 | <        | 小于     |
@@ -108,6 +106,7 @@ const { res, msg } = validator.validate(formData, rules);
 | >=       | 大于等于 |
 | =        | 等于     |
 
+代码示例：
 ```js
 // 第一种 表单必填
 { field: 'name', tip: '姓名为必填项'}
