@@ -384,7 +384,6 @@ var validate = function (formData, rulesArr) {
                 // 值为空，但有need
             }
             else if (isEmpty(currentValue) && need) {
-                console.log('need', field);
                 var t = doValidateNeed(formData, need);
                 if (t)
                     return setErrorRes(tip, name_1);

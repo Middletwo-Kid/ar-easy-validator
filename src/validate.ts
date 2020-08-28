@@ -155,7 +155,6 @@ const validate = (formData: IFormData, rulesArr: IFormDataRules[]) => {
         return setErrorRes(tip, name);
         // 值为空，但有need
       } else if (isEmpty(currentValue) && need) {
-        console.log('need', field)
         const t = doValidateNeed(formData, need);
         if (t) return setErrorRes(tip, name);
         // 有值，但没有rules,即isRequired
