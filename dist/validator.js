@@ -193,7 +193,6 @@ var Validator = /** @class */ (function () {
         this.validate = validate_1.default;
     }
     Validator.prototype.addRules = function (key, fn) {
-        console.log('addRules');
         // @ts-ignore
         this[key] = fn;
     };
