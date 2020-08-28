@@ -6,7 +6,7 @@ const commonVaidatorRules: IFormData = validatorRules;
 
 // 是否为空
 const isEmpty = (value: any) => {
-  return value == null || value === '';
+  return value == null || value === '' || (Array.isArray(value) && value.length == 0);
 }
 
 // 校验函数的参数
@@ -155,6 +155,7 @@ const validate = (formData: IFormData, rulesArr: IFormDataRules[]) => {
         return setErrorRes(tip, name);
         // 值为空，但有need
       } else if (isEmpty(currentValue) && need) {
+        console.log('need', field)
         const t = doValidateNeed(formData, need);
         if (t) return setErrorRes(tip, name);
         // 有值，但没有rules,即isRequired
