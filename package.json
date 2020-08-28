@@ -1,6 +1,6 @@
 {
   "name": "ar-easy-validator",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "轻量级校验器",
   "main": "./dist/validator.min.js",
   "files": [
