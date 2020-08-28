@@ -13,6 +13,9 @@ npm install --save ar-easy-validator
 ```
 
 ## 什么是ar-easy-validator
+之前有一个需求是，当用户填完所有的表单才会高亮按钮，若按钮置灰时，点击按钮用户还可以知道没有完成的表单项是哪些，除此之外，表单中有些内容是否是必填项取决于某一项是否符合某些条件，于是封装了这个校验器。
+
+![demo](https://github.com/Middletwo-Kid/ar-easy-validator/blob/master/public/demo.gif)
 
 通过传入一个表单内含有的值和需要校验的规则，返回校验的结果和提示消息。
 
@@ -101,6 +104,7 @@ rules可支持字符串、对象和数组：
 | isInt        | 整数       |
 | isMoney      | 金额       |
 | isEmail      | 邮箱       |
+
 当rules为对象时， 可传入以下参数：
 
 | 校验方法 | 通过条件 |
