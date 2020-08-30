@@ -40,8 +40,18 @@ const formDataRules = [
     // 当isStudent==1时才会去校验job字段
     { field: 'job', name: '工作', need: [{field: 'isStudent', rules: {'==': 0}}]}
 ]
-const { res, msg } = validator.validate(formData, formDataRules);
+let { res, msg } = validator.validate(formData, formDataRules);
 console.log(res, msg);       // false 【性别】格式有误
+
+// 新增自定义校验器
+validator.addRules('isInArray', (str) => {
+    return [1,2,3,4,5,6,7,8,9,0].indexOf(str);
+})
+const ohterRules = [
+    { field: 'name', name: '姓名', need: [{ field: 'test', rules: 'isInArray'}]}
+]
+{ res, msg } = validator.validate({name: '', test: 3}, ohterRules);
+console.log(res, msg);       // false 【姓名】格式有误
 ```
 
 ## 方法说明
@@ -59,6 +69,7 @@ console.log(res, msg);       // false 【性别】格式有误
 | isMoney    | 金额            |
 | isEmail    | 邮箱            |
 | validate   | 校验方法        |
+| addRules   | 自定义校验方法        |
 
 代码示例：
 ```js
@@ -66,7 +77,7 @@ const { res1 } = validator.isName('错误的姓名');      // false
 const { res2 } = validator.isPhone('13800138000');   // true
 ```
 
-## validate方法说明
+## validate说明
 
 ```js
 const { res, msg } = validator.validate(formData, rules);
@@ -127,8 +138,23 @@ rules可支持字符串、对象和数组：
 { field: 'reference_data_seller', need:[{field: 'sales_channel_type', rules: {'=': 2}}] },
 ```
 
+## addRules
+
+代码示例：
+
+```js
+validator.addRules('isInArray', (str) => {
+   return [1,2,3,4,5,6,7,8,9,0].indexOf(str);
+})
+
+validator.isInArray('3');
+validator.validate({test: 3}, rules: 'isArray');
+```
+
+该方法接受两个参数，第一个是校验规则的名字，第二个是校验函数。
+
+注意： 校验规则不可命名为`validate`和`addRules`。
+
 ## 结尾
 
-后期会新增自定义校验器。
-
-如有问题欢迎提`issue`，感谢使用~。
+如有问题欢迎提`issue`或者`pr`，感谢使用~
