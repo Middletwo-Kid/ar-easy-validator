@@ -232,7 +232,7 @@ var sign = ['>', '>=', '==', '===', '<', '<='];
 var commonVaidatorRules = validatorRules;
 // 是否为空
 var isEmpty = function (value) {
-    return value == null || value === '' || (Array.isArray(value) && value.length == 0);
+    return value == null || value === '' || (Array.isArray(value) && value.length == 0) || typeof value == 'undefined';
 };
 // 校验函数的参数
 var checkFormAndRules = function (formData, rules) {
@@ -363,6 +363,9 @@ var doValidate = function (value, rules) {
 var doValidateNeed = function (formData, need) {
     for (var i = 0, len = need.length; i < len; i++) {
         var currentValue = formData[need[i].field];
+        if (isEmpty(currentValue))
+            return false;
+        console.log(currentValue, 'current', isEmpty(currentValue));
         var rule = need[i].rules;
         var flag = doValidate(currentValue, rule);
         if (!flag)

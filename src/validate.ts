@@ -6,7 +6,7 @@ const commonVaidatorRules: IFormData = validatorRules;
 
 // 是否为空
 const isEmpty = (value: any) => {
-  return value == null || value === '' || (Array.isArray(value) && value.length == 0);
+  return value == null || value === '' || (Array.isArray(value) && value.length == 0) || typeof value == 'undefined';
 }
 
 // 校验函数的参数
@@ -136,6 +136,7 @@ const doValidate = (value: any, rules?: any | IFormDataRules[]) => {
 const doValidateNeed = (formData: IFormData, need?: any | RulesNeed[]) => {
   for (let i = 0, len = need.length; i < len; i++) {
     const currentValue = formData[need[i].field];
+    if(isEmpty(currentValue)) return false; 
     const rule = need[i].rules;
     let flag = doValidate(currentValue, rule);
     if (!flag) return false;
