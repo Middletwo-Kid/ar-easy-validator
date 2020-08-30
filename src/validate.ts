@@ -1,15 +1,15 @@
 import { IFormData, IFormDataRules, RulesNeed } from './type';
-import * as validatorRules from './validatorRules';
 const sign = ['>', '>=', '==', '===', '<', '<='];
-
-const commonVaidatorRules: IFormData = validatorRules;
+import {validator} from '../index';
+let commonValidator: {[index: string] : any};
+let commonVaidatorRules: any[] = [];
 
 // 是否为空
 const isEmpty = (value: any) => {
   return value == null || value === '' || (Array.isArray(value) && value.length == 0) || typeof value == 'undefined';
 }
 
-// 校验函数的参数
+// 校验函数的参数(formData和rules)
 const checkFormAndRules = (formData: IFormData, rules: IFormDataRules[]): boolean => {
   if (!formData || typeof formData != 'object' || JSON.stringify(formData) == "{}") {
     throw new Error('表单对象不能为空');
@@ -81,8 +81,8 @@ const checkRuleType = (rules: any | any[]) => {
 
 const checkFileByString = (value: string, rules: string = 'isRequired') => {
   try {
-    if (!(rules in commonVaidatorRules)) throw new Error('当前rules值不存在于校验器规则中');
-    else return commonVaidatorRules[rules](value);
+    if (commonVaidatorRules.indexOf(rules) === -1) throw new Error('当前rules值不存在于校验器规则中');
+    else return commonValidator[rules](value);
   } catch (error) {
     console.error(error);
   }
@@ -146,6 +146,10 @@ const doValidateNeed = (formData: IFormData, need?: any | RulesNeed[]) => {
 
 const validate = (formData: IFormData, rulesArr: IFormDataRules[]) => {
   if (!checkFormAndRules(formData, rulesArr)) return;
+  commonValidator = validator;
+  commonVaidatorRules = Object.keys(validator).filter(key => {
+    return key !== 'validate'; 
+  })
   try {
     for (let i = 0, len = rulesArr.length; i < len; i++) {
       const { field, name, rules, need, tip } = rulesArr[i];

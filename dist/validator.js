@@ -91,11 +91,61 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.validator = void 0;
+var validatorRules = __importStar(__webpack_require__(1));
+var validate_1 = __importDefault(__webpack_require__(2));
+var Validator = /** @class */ (function () {
+    function Validator(validatorRules) {
+        var _this = this;
+        Object.keys(validatorRules).forEach(function (key) {
+            // @ts-ignore
+            _this[key] = validatorRules[key];
+        });
+        this.validate = validate_1.default;
+    }
+    Validator.prototype.addRules = function (key, fn) {
+        // @ts-ignore
+        this[key] = fn;
+    };
+    return Validator;
+}());
+exports.validator = new Validator(validatorRules);
+
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -152,89 +202,21 @@ exports.isEmail = function (str) { return /^([a-zA-Z\d])(\w|\-)+@[a-zA-Z\d]+\.[a
 
 
 /***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.validator = void 0;
-var validatorRules = __importStar(__webpack_require__(0));
-var validate_1 = __importDefault(__webpack_require__(2));
-var Validator = /** @class */ (function () {
-    function Validator(validatorRules) {
-        var _this = this;
-        Object.keys(validatorRules).forEach(function (key) {
-            // @ts-ignore
-            _this[key] = validatorRules[key];
-        });
-        this.validate = validate_1.default;
-    }
-    Validator.prototype.addRules = function (key, fn) {
-        // @ts-ignore
-        this[key] = fn;
-    };
-    return Validator;
-}());
-exports.validator = new Validator(validatorRules);
-
-
-/***/ }),
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var validatorRules = __importStar(__webpack_require__(0));
 var sign = ['>', '>=', '==', '===', '<', '<='];
-var commonVaidatorRules = validatorRules;
+var index_1 = __webpack_require__(0);
+var commonValidator;
+var commonVaidatorRules = [];
 // 是否为空
 var isEmpty = function (value) {
     return value == null || value === '' || (Array.isArray(value) && value.length == 0) || typeof value == 'undefined';
 };
-// 校验函数的参数
+// 校验函数的参数(formData和rules)
 var checkFormAndRules = function (formData, rules) {
     if (!formData || typeof formData != 'object' || JSON.stringify(formData) == "{}") {
         throw new Error('表单对象不能为空');
@@ -306,10 +288,10 @@ var checkRuleType = function (rules) {
 var checkFileByString = function (value, rules) {
     if (rules === void 0) { rules = 'isRequired'; }
     try {
-        if (!(rules in commonVaidatorRules))
+        if (commonVaidatorRules.indexOf(rules) === -1)
             throw new Error('当前rules值不存在于校验器规则中');
         else
-            return commonVaidatorRules[rules](value);
+            return commonValidator[rules](value);
     }
     catch (error) {
         console.error(error);
@@ -365,7 +347,6 @@ var doValidateNeed = function (formData, need) {
         var currentValue = formData[need[i].field];
         if (isEmpty(currentValue))
             return false;
-        console.log(currentValue, 'current', isEmpty(currentValue));
         var rule = need[i].rules;
         var flag = doValidate(currentValue, rule);
         if (!flag)
@@ -376,6 +357,10 @@ var doValidateNeed = function (formData, need) {
 var validate = function (formData, rulesArr) {
     if (!checkFormAndRules(formData, rulesArr))
         return;
+    commonValidator = index_1.validator;
+    commonVaidatorRules = Object.keys(index_1.validator).filter(function (key) {
+        return key !== 'validate';
+    });
     try {
         for (var i = 0, len = rulesArr.length; i < len; i++) {
             var _a = rulesArr[i], field = _a.field, name_1 = _a.name, rules = _a.rules, need = _a.need, tip = _a.tip;

@@ -15,16 +15,3 @@ export interface IFormDataRules {
   rules?: RulesType,
   need?: RulesNeed[]
 }
-
-export interface IValidatorRules {
-  isRequired: any,
-  isName: any,
-  isPhone: any,
-  isCode: any,
-  isBankcard: any,
-  isIdcard: any,
-  isAge: any,
-  isWx: any,
-  isMoney: any,
-  isEmail: any
-}
