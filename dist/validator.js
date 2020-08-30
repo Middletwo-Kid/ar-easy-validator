@@ -136,8 +136,17 @@ var Validator = /** @class */ (function () {
         this.validate = validate_1.default;
     }
     Validator.prototype.addRules = function (key, fn) {
-        // @ts-ignore
-        this[key] = fn;
+        try {
+            if (key === 'validate' || key === 'addRules')
+                throw new Error("\u65B0\u6DFB\u52A0\u7684\u89C4\u5219\u4E0D\u53EF\u547D\u540D\u4E3A" + key);
+            if (typeof fn !== 'function')
+                throw new Error("addRules\u4F20\u53C2\u9519\u8BEF");
+            // @ts-ignore
+            this[key] = fn;
+        }
+        catch (error) {
+            console.error(error);
+        }
     };
     return Validator;
 }());

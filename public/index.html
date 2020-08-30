@@ -9,21 +9,11 @@
   <script src="../dist/validator.min.js"></script>
   <script>
     window.onload = () => {
-      const formData = {
-        name: '',
-        age: 0,
-        sex: 0,
-        test: 2
-      };
+      const formData = {name: '王思聪', test: '123'};
       const needName = true;
       const rules = [
-        { field: 'test', name: '测试', rules: 'isTest'},
-        { field: 'name', name: '姓名', rules: 'isName', need: [{ field: 'needName'}]}
+        {field: 'name', name: '姓名', rules: 'isName', need: [{field: 'test'}]}
       ]
-
-      validator.addRules('isTest', (str) => {
-        return '1,2,3,4'.includes(str) ;
-      } )
 
       const { res, msg } = validator.validate(formData, rules);
       console.log(res, msg);
