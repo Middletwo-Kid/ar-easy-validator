@@ -17,8 +17,8 @@ npm install --save ar-easy-validator
 
 现在其实有很多现成的校验器，但是这个校验器有以下几个特点：
 - 该校验器有一个`need`属性，可适用于当A条件成立的条件下才去校验某一项表单；
-- 可以新增或者改写校验规则（方法）；
-- 书写规则和其他校验器不一样，对于某些人来说可能比较通俗易懂。
+- 可以新增或者改写校验规则（方法）且新增过一次之后不用再重复新增；
+- 书写规则和其他校验器不太一样，对于某些人来说可能比较通俗易懂。
 
 ![demo](https://github.com/Middletwo-Kid/ar-easy-validator/blob/master/public/demo.gif)
 
