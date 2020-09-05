@@ -29,6 +29,27 @@ describe('测试need,当有need的时候才校验name', () => {
   });
 });
 
+describe('二选一校验', () => {
+  const rule: any[] = [
+    {field: 'phone', name: '电话', rules: 'isPhone', need: [{field: 'wx', rules: 'isEmpty'}]}
+  ]
+  it('phone为空,wx不为空', () => {
+    expect(validator.validate({phone: '', wx: '123'}, rule)).toStrictEqual({"res": true, "msg": 'success'});
+  });
+
+  it('错误的phone,wx不为空', () => {
+    expect(validator.validate({phone: '123', wx: '123'}, rule)).toStrictEqual({"res": true, "msg": 'success'});
+  });
+
+  it('错误的phone,wx为空', () => {
+    expect(validator.validate({phone: '123', wx: ''}, rule)).toStrictEqual({"res": false, "msg": '【电话】格式有误'});
+  });
+
+  it('正确的phone,wx为空', () => {
+    expect(validator.validate({phone: '13800138000', wx: ''}, rule)).toStrictEqual({"res": true, "msg": 'success'});
+  });
+});
+
 describe('测试自定义校验器', () => {
   validator.addRules('isInArray', (str: any) => {
     return [1,2,3,4,5,6,7,8,9,0].indexOf(str) > -1;

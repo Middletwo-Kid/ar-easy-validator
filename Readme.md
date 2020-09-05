@@ -73,13 +73,14 @@ console.log(res, msg);       // false 【姓名】格式有误
 | isWx       | 微信            |
 | isMoney    | 金额            |
 | isEmail    | 邮箱            |
+| isEmpty    | 是否为空         |
 | validate   | 校验方法        |
 | addRules   | 自定义校验方法        |
 
 代码示例：
 ```js
-const { res1 } = validator.isName('错误的姓名');      // false
-const { res2 } = validator.isPhone('13800138000');   // true
+const { res } = validator.isName('错误的姓名');      // false
+const { res } = validator.isPhone('13800138000');   // true
 ```
 
 ## validate说明
@@ -141,6 +142,8 @@ rules可支持字符串、对象和数组：
 { field: 'money', rules: ['isMoney', {'>': 2}, {'<': 100}], tip: '金额不能为空，且必须大于2小于100'}
 // 第四种 当sales_channel_type == 2 时，才校验reference_data_seller
 { field: 'reference_data_seller', need:[{field: 'sales_channel_type', rules: {'=': 2}}] },
+// 第五种 当wx号为空时，才校验phone或当phone为空时才校验wx, 即二选一，其中一项必填
+{ field: 'phone', need:[{field: 'wx', rules: 'isEmpty'}] },
 ```
 
 ## addRules
@@ -159,6 +162,30 @@ validator.validate({test: 3}, rules: 'isArray');
 该方法接受两个参数，第一个是校验规则的名字，第二个是校验函数。
 
 注意： 校验规则不可命名为`validate`和`addRules`。
+
+## 更新日志
+
+### 2020/09/05 v1.2.2
+1. 新增
+- 新增`isEmpty`校验器；
+- 新增能实现二选一校验的规则。
+
+2. 优化
+- 优化表单内的取值，支持以点的方式获得当前校验的值，如`field: 'reference.phone'`
+
+3. 修复
+无
+
+### 2020/08/30 v1.2.1
+1. 新增
+- 新增多种常用校验器；
+- 新增自定义校验器。
+
+2. 优化
+无。
+
+3. 修复
+无
 
 ## 结尾
 

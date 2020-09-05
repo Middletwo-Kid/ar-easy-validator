@@ -160,8 +160,9 @@ exports.validator = new Validator(validatorRules);
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isEmail = exports.isMoney = exports.isWx = exports.isAge = exports.isIdcard = exports.isBankcard = exports.isCode = exports.isPhone = exports.isName = exports.isRequired = void 0;
+exports.isEmail = exports.isMoney = exports.isWx = exports.isAge = exports.isIdcard = exports.isBankcard = exports.isCode = exports.isPhone = exports.isName = exports.isEmpty = exports.isRequired = void 0;
 exports.isRequired = function (str) { return String(str).length > 0; };
+exports.isEmpty = function (str) { return str == null || str === '' || (Array.isArray(str) && str.length == 0) || typeof str == 'undefined' || JSON.stringify(str) == '{}'; };
 exports.isName = function (str) { return /^[\u4E00-\u9FA5]{2,4}$/.test(str); };
 exports.isPhone = function (str) { return /^1[3456789][0-9]{9}$/.test(str); };
 exports.isCode = function (str) { return /^[0-9]{6}$/.test(str); };
@@ -223,7 +224,7 @@ var commonValidator;
 var commonVaidatorRules = [];
 // 是否为空
 var isEmpty = function (value) {
-    return value == null || value === '' || (Array.isArray(value) && value.length == 0) || typeof value == 'undefined';
+    return value == null || value === '' || (Array.isArray(value) && value.length == 0) || typeof value == 'undefined' || JSON.stringify(value) == '{}';
 };
 // 校验函数的参数(formData和rules)
 var checkFormAndRules = function (formData, rules) {
@@ -350,12 +351,24 @@ var doValidate = function (value, rules) {
         default: return checkFileByString(value);
     }
 };
+// 获得表单中的值
+var getValueByField = function (formData, key) {
+    var field = key.split('.');
+    var obj = formData;
+    for (var i = 0, len = field.length; i < len; i++) {
+        obj = getObj(obj, field[i]);
+        if (!obj)
+            return '';
+    }
+    return obj;
+};
+var getObj = function (formData, key) {
+    return formData[key];
+};
 // 校验need中的rules
 var doValidateNeed = function (formData, need) {
     for (var i = 0, len = need.length; i < len; i++) {
-        var currentValue = formData[need[i].field];
-        if (isEmpty(currentValue))
-            return false;
+        var currentValue = getValueByField(formData, need[i].field);
         var rule = need[i].rules;
         var flag = doValidate(currentValue, rule);
         if (!flag)
@@ -373,16 +386,17 @@ var validate = function (formData, rulesArr) {
     try {
         for (var i = 0, len = rulesArr.length; i < len; i++) {
             var _a = rulesArr[i], field = _a.field, name_1 = _a.name, rules = _a.rules, need = _a.need, tip = _a.tip;
-            var currentValue = formData[field];
+            var currentValue = getValueByField(formData, field);
             var flag = true;
             // 值为空，且没有need
             if (isEmpty(currentValue) && !need) {
-                return setErrorRes(tip, name_1);
+                if (rules != 'isEmpty')
+                    return setErrorRes(tip, name_1);
                 // 值为空，但有need
             }
             else if (isEmpty(currentValue) && need) {
                 var t = doValidateNeed(formData, need);
-                if (t)
+                if (t && rules != 'isEmpty')
                     return setErrorRes(tip, name_1);
                 // 有值，但没有rules,即isRequired
             }

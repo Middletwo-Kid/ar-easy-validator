@@ -6,7 +6,7 @@ let commonVaidatorRules: any[] = [];
 
 // 是否为空
 const isEmpty = (value: any) => {
-  return value == null || value === '' || (Array.isArray(value) && value.length == 0) || typeof value == 'undefined';
+  return value == null || value === '' || (Array.isArray(value) && value.length == 0) || typeof value == 'undefined' || JSON.stringify(value) == '{}';
 }
 
 // 校验函数的参数(formData和rules)
@@ -132,11 +132,25 @@ const doValidate = (value: any, rules?: any | IFormDataRules[]) => {
   }
 }
 
+// 获得表单中的值
+const getValueByField = (formData: IFormData, key: string) => {
+  const field = key.split('.');
+  let obj = formData;
+  for(let i = 0, len = field.length; i < len; i++){
+    obj = getObj(obj, field[i]);
+    if(!obj) return '';
+  }
+  return obj;
+}
+
+const getObj = (formData: IFormData, key: string) => {
+  return formData[key];
+}
+
 // 校验need中的rules
 const doValidateNeed = (formData: IFormData, need?: any | RulesNeed[]) => {
   for (let i = 0, len = need.length; i < len; i++) {
-    const currentValue = formData[need[i].field];
-    if(isEmpty(currentValue)) return false; 
+    const currentValue = getValueByField(formData, need[i].field);
     const rule = need[i].rules;
     let flag = doValidate(currentValue, rule);
     if (!flag) return false;
@@ -153,15 +167,15 @@ const validate = (formData: IFormData, rulesArr: IFormDataRules[]) => {
   try {
     for (let i = 0, len = rulesArr.length; i < len; i++) {
       const { field, name, rules, need, tip } = rulesArr[i];
-      const currentValue = formData[field];
+      const currentValue = getValueByField(formData, field);
       let flag = true;
       // 值为空，且没有need
       if (isEmpty(currentValue) && !need) {
-        return setErrorRes(tip, name);
+        if(rules != 'isEmpty') return setErrorRes(tip, name);
         // 值为空，但有need
       } else if (isEmpty(currentValue) && need) {
         const t = doValidateNeed(formData, need);
-        if (t) return setErrorRes(tip, name);
+        if (t && rules != 'isEmpty') return setErrorRes(tip, name);
         // 有值，但没有rules,即isRequired
       } else if (!isEmpty(currentValue) && !rules) {
         flag = doValidate(currentValue);

@@ -225,3 +225,44 @@ describe('examples', () => {
     expect(validate({email: 'test@qq.com'}, rule9)).toStrictEqual({"res": true, "msg": 'success'});
   })
 })
+
+
+const rule10 = [
+  {field: 'email', name: '空', rules: 'isEmpty'}
+]
+
+describe('examples', () => {
+  it('空为空字符串', () => {
+    expect(validate({email: ''}, rule10)).toStrictEqual({"res": true, "msg": 'success'});
+  })
+})
+
+describe('examples', () => {
+  it('空为0', () => {
+    expect(validate({email: 0}, rule10)).toStrictEqual({"res": true, "msg": 'success'});
+  })
+})
+
+describe('examples', () => {
+  it('空为{}', () => {
+    expect(validate({email: {}}, rule10)).toStrictEqual({"res": true, "msg": 'success'});
+  })
+})
+
+describe('examples', () => {
+  it('空为[]', () => {
+    expect(validate({email: []}, rule10)).toStrictEqual({"res": true, "msg": 'success'});
+  })
+})
+
+describe('examples', () => {
+  it('空为"0"', () => {
+    expect(validate({email: "0"}, rule10)).toStrictEqual({"res": false, "msg": '【空】格式有误'});
+  })
+})
+
+describe('examples', () => {
+  it('空为1', () => {
+    expect(validate({email: 1}, rule10)).toStrictEqual({"res": false, "msg": '【空】格式有误'});
+  })
+})

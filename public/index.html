@@ -9,14 +9,14 @@
   <script src="../dist/validator.min.js"></script>
   <script>
     window.onload = () => {
-      validator.addRules('isInArray', (str) => {
-          return [1,2,3,4,5,6,7,8,9,0].indexOf(str);
-      })
-      const ohterRules = [
-          { field: 'name', name: '姓名', need: [{ field: 'test', rules: 'isInArray'}]}
+      const rule10 = [
+        {field: 'email', name: '空', rules: 'isEmpty'}
       ]
-      const { res, msg } = validator.validate({name: '', test: 3}, ohterRules);
-      console.log(res, msg);       // false 【姓名】格式有误
+      const formData = {
+        email: ''
+      }
+      const result = validator.validate(formData, rule10);
+      console.log(result.res, result.msg);   
     }
   </script>
 </body>
