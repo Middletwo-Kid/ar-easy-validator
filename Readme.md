@@ -136,15 +136,15 @@ rules可支持字符串、对象和数组：
 代码示例：
 ```js
 // 第一种 表单必填
-{ field: 'name', tip: '姓名为必填项'}
+{ field: 'name', name:'姓名', tip: '姓名为必填项'}
 // 第二种 有校验规则
-{ field: 'name', rules: 'isName', tip: '姓名为必填项'}
+{ field: 'name', name: '姓名', rules: 'isName', tip: '姓名为必填项'}
 // 第三种 多种校验规则
-{ field: 'money', rules: ['isMoney', {'>': 2}, {'<': 100}], tip: '金额不能为空，且必须大于2小于100'}
+{ field: 'money', name: '金额', rules: ['isMoney', {'>': 2}, {'<': 100}], tip: '金额不能为空，且必须大于2小于100'}
 // 第四种 当sales_channel_type == 2 时，才校验reference_data_seller
-{ field: 'reference_data_seller', need:[{field: 'sales_channel_type', rules: {'=': 2}}] },
+{ field: 'reference_data_seller', name: '推单人', need:[{field: 'sales_channel_type', rules: {'=': 2}}] },
 // 第五种 当wx号为空时，才校验phone或当phone为空时才校验wx, 即二选一，其中一项必填
-{ field: 'phone', need:[{field: 'wx', rules: 'isEmpty'}] },
+{ field: 'phone', name: '联系方式', need:[{field: 'wx', rules: 'isEmpty'}] },
 ```
 
 ## addRules
