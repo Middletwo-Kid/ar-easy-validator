@@ -113,6 +113,7 @@ rules可支持字符串、对象和数组：
 | ------------ | ---------- |
 | isRequired   | 必填       |
 | isName       | 姓名       |
+| isNumber   | 纯数字       |
 | isPhone      | 手机号     |
 | isCode       | 手机验证码 |
 | isBankcard   | 银行卡     |
@@ -122,6 +123,7 @@ rules可支持字符串、对象和数组：
 | isInt        | 整数       |
 | isMoney      | 金额       |
 | isEmail      | 邮箱       |
+| isEmpty      | 是否为空   |
 
 当rules为对象时， 可传入以下参数：
 
