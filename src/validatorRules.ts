@@ -1,6 +1,7 @@
 export const isRequired = (str: any) => String(str).length > 0;
 export const isEmpty = (str: any) =>  str == null || str === '' || (Array.isArray(str) && str.length == 0) || typeof str == 'undefined' || JSON.stringify(str) == '{}';
 export const isName = (str: any) => /^[\u4E00-\u9FA5]{2,4}$/.test(str);
+export const isNumber = (str: any) => /^[0-9]*$/.test(str);
 export const isPhone = (str: any) => /^1[3456789][0-9]{9}$/.test(str);
 export const isCode = (str: any) => /^[0-9]{6}$/.test(str);
 export const isBankcard = (str: any) => /^[0-9]{16,19}$/.test(str);
