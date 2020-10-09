@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1599273244404" clover="3.2.0">
-  <project timestamp="1599273244404" name="All files">
-    <metrics statements="168" coveredstatements="147" conditionals="134" coveredconditionals="106" methods="30" coveredmethods="30" elements="332" coveredelements="283" complexity="0" loc="168" ncloc="168" packages="2" files="3" classes="3"/>
+<coverage generated="1602236189826" clover="3.2.0">
+  <project timestamp="1602236189826" name="All files">
+    <metrics statements="169" coveredstatements="148" conditionals="155" coveredconditionals="125" methods="31" coveredmethods="30" elements="355" coveredelements="303" complexity="0" loc="169" ncloc="169" packages="2" files="3" classes="3"/>
     <package name="crm-validator">
       <metrics statements="15" coveredstatements="14" conditionals="6" coveredconditionals="4" methods="4" coveredmethods="4"/>
       <file name="index.ts" path="E:\code\learn\crm-validator\index.ts">
@@ -11,7 +11,7 @@
         <line num="4" count="2" type="stmt"/>
         <line num="7" count="2" type="stmt"/>
         <line num="8" count="2" type="stmt"/>
-        <line num="10" count="22" type="stmt"/>
+        <line num="10" count="24" type="stmt"/>
         <line num="12" count="2" type="stmt"/>
         <line num="15" count="2" type="stmt"/>
         <line num="16" count="1" type="stmt"/>
@@ -24,7 +24,7 @@
       </file>
     </package>
     <package name="crm-validator.src">
-      <metrics statements="153" coveredstatements="133" conditionals="128" coveredconditionals="102" methods="26" coveredmethods="26"/>
+      <metrics statements="154" coveredstatements="134" conditionals="149" coveredconditionals="121" methods="27" coveredmethods="26"/>
       <file name="validate.ts" path="E:\code\learn\crm-validator\src\validate.ts">
         <metrics statements="118" coveredstatements="102" conditionals="110" coveredconditionals="88" methods="15" coveredmethods="15"/>
         <line num="2" count="2" type="stmt"/>
@@ -119,7 +119,7 @@
         <line num="162" count="53" type="cond" truecount="1" falsecount="1"/>
         <line num="163" count="53" type="stmt"/>
         <line num="164" count="53" type="stmt"/>
-        <line num="165" count="652" type="stmt"/>
+        <line num="165" count="705" type="stmt"/>
         <line num="167" count="53" type="stmt"/>
         <line num="168" count="53" type="stmt"/>
         <line num="169" count="59" type="stmt"/>
@@ -147,42 +147,43 @@
         <line num="211" count="2" type="stmt"/>
       </file>
       <file name="validatorRules.ts" path="E:\code\learn\crm-validator\src\validatorRules.ts">
-        <metrics statements="35" coveredstatements="31" conditionals="18" coveredconditionals="14" methods="11" coveredmethods="11"/>
-        <line num="1" count="7" type="stmt"/>
+        <metrics statements="36" coveredstatements="32" conditionals="39" coveredconditionals="33" methods="12" coveredmethods="11"/>
+        <line num="1" count="19" type="cond" truecount="2" falsecount="0"/>
         <line num="2" count="6" type="cond" truecount="5" falsecount="1"/>
-        <line num="3" count="6" type="stmt"/>
-        <line num="4" count="4" type="stmt"/>
-        <line num="5" count="2" type="stmt"/>
-        <line num="6" count="2" type="stmt"/>
-        <line num="7" count="2" type="stmt"/>
-        <line num="8" count="2" type="stmt"/>
+        <line num="3" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="4" count="3" type="cond" truecount="0" falsecount="2"/>
+        <line num="5" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="6" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="7" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="8" count="3" type="stmt"/>
         <line num="9" count="2" type="stmt"/>
         <line num="10" count="2" type="stmt"/>
-        <line num="12" count="2" type="cond" truecount="4" falsecount="0"/>
-        <line num="13" count="1" type="stmt"/>
+        <line num="11" count="2" type="stmt"/>
+        <line num="13" count="2" type="cond" truecount="4" falsecount="0"/>
         <line num="14" count="1" type="stmt"/>
-        <line num="15" count="1" type="cond" truecount="1" falsecount="1"/>
-        <line num="16" count="0" type="stmt"/>
+        <line num="15" count="1" type="stmt"/>
+        <line num="16" count="1" type="cond" truecount="1" falsecount="1"/>
         <line num="17" count="0" type="stmt"/>
-        <line num="20" count="1" type="cond" truecount="1" falsecount="1"/>
-        <line num="21" count="1" type="stmt"/>
-        <line num="24" count="1" type="stmt"/>
-        <line num="26" count="1" type="stmt"/>
+        <line num="18" count="0" type="stmt"/>
+        <line num="21" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="22" count="1" type="stmt"/>
+        <line num="25" count="1" type="stmt"/>
         <line num="27" count="1" type="stmt"/>
         <line num="28" count="1" type="stmt"/>
         <line num="29" count="1" type="stmt"/>
         <line num="30" count="1" type="stmt"/>
-        <line num="32" count="17" type="stmt"/>
+        <line num="31" count="1" type="stmt"/>
         <line num="33" count="17" type="stmt"/>
         <line num="34" count="17" type="stmt"/>
-        <line num="36" count="1" type="cond" truecount="1" falsecount="1"/>
-        <line num="37" count="0" type="stmt"/>
+        <line num="35" count="17" type="stmt"/>
+        <line num="37" count="1" type="cond" truecount="1" falsecount="1"/>
         <line num="38" count="0" type="stmt"/>
-        <line num="41" count="1" type="stmt"/>
-        <line num="44" count="2" type="stmt"/>
+        <line num="39" count="0" type="stmt"/>
+        <line num="42" count="1" type="cond" truecount="2" falsecount="0"/>
         <line num="45" count="3" type="cond" truecount="2" falsecount="0"/>
-        <line num="46" count="6" type="stmt"/>
-        <line num="47" count="2" type="stmt"/>
+        <line num="46" count="3" type="cond" truecount="3" falsecount="0"/>
+        <line num="47" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="48" count="3" type="cond" truecount="2" falsecount="0"/>
       </file>
     </package>
   </project>

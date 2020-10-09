@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">91.3% </span>
+                <span class="strong">89.58% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>42/46</span>
+                <span class='fraction'>43/48</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">77.78% </span>
+                <span class="strong">84.62% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>14/18</span>
+                <span class='fraction'>33/39</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">91.67% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>11/11</span>
+                <span class='fraction'>11/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">88.57% </span>
+                <span class="strong">88.89% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>31/35</span>
+                <span class='fraction'>32/36</span>
             </div>
         
             
@@ -103,13 +103,15 @@
 <a name='L44'></a><a href='#L44'>44</a>
 <a name='L45'></a><a href='#L45'>45</a>
 <a name='L46'></a><a href='#L46'>46</a>
-<a name='L47'></a><a href='#L47'>47</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">7x</span>
+<a name='L47'></a><a href='#L47'>47</a>
+<a name='L48'></a><a href='#L48'>48</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">19x</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
@@ -146,15 +148,16 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">2x</span></td><td class="text"><pre class="prettyprint lang-js">export const isRequired = (str: any) =&gt; String(str).length &gt; 0;
+<span class="cline-any cline-yes">3x</span></td><td class="text"><pre class="prettyprint lang-js">export const isRequired = (str: any) =&gt; str != undefined &amp;&amp; String(str).length &gt; 0;
 export const isEmpty = (str: any) =&gt;  str == null || str === '' || (Array.isArray(str) &amp;&amp; <span class="branch-3 cbranch-no" title="branch not covered" >str.length == 0)</span> || typeof str == 'undefined' || JSON.stringify(str) == '{}';
-export const isName = (str: any) =&gt; /^[\u4E00-\u9FA5]{2,4}$/.test(str);
-export const isPhone = (str: any) =&gt; /^1[3456789][0-9]{9}$/.test(str);
-export const isCode = (str: any) =&gt; /^[0-9]{6}$/.test(str);
-export const isBankcard = (str: any) =&gt; /^[0-9]{16,19}$/.test(str);
+export const isName = (str: any) =&gt; str != undefined &amp;&amp; /^[\u4E00-\u9FA5]{2,4}$/.test(str);
+export const isNumber = <span class="fstat-no" title="function not covered" >(s</span>tr: any) =&gt; <span class="cstat-no" title="statement not covered" >str != undefined &amp;&amp; /^[0-9]*$/.test(str);</span>
+export const isPhone = (str: any) =&gt; str != undefined &amp;&amp; /^1[3456789][0-9]{9}$/.test(str);
+export const isCode = (str: any) =&gt; str != undefined &amp;&amp; /^[0-9]{6}$/.test(str);
+export const isBankcard = (str: any) =&gt; str != undefined &amp;&amp; /^[0-9]{16,19}$/.test(str);
 export const isIdcard = (code: any) =&gt; {
   let city: {[index: number]: string} ={11:"北京",12:"天津",13:"河北",14:"山西",15:"内蒙古",21:"辽宁",22:"吉林",23:"黑龙江 ",31:"上海",32:"江苏",33:"浙江",34:"安徽",35:"福建",36:"江西",37:"山东",41:"河南",42:"湖北 ",43:"湖南",44:"广东",45:"广西",46:"海南",50:"重庆",51:"四川",52:"贵州",53:"云南",54:"西藏 ",61:"陕西",62:"甘肃",63:"青海",64:"宁夏",65:"新疆",71:"台湾",81:"香港",82:"澳门",91:"国外 "};
   let pass: boolean = true;
@@ -189,20 +192,20 @@ export const isIdcard = (code: any) =&gt; {
 <span class="cstat-no" title="statement not covered" >        msg = "身份证号校验位错误";</span>
       }
     }
-    return pass ;
+    return code != undefined &amp;&amp; pass ;
   }
 };
-export const isAge = (str: any) =&gt; /^(?:[1-9][0-9]?|1[01][0-9]|120)$/.test(str);
-export const isWx = (str: any) =&gt; ((/^1[3456789][0-9]{9}$/.test(str) || /^[a-zA-Z]{1}[-_a-zA-Z0-9]{5,19}$/.test(str)));
-export const isMoney = (str: any) =&gt; /((^[1-9]\d*)|^0)(\.\d{0,2}){0,1}$/.test(str);
-export const isEmail = (str: any) =&gt; /^([a-zA-Z\d])(\w|\-)+@[a-zA-Z\d]+\.[a-zA-Z]{2,4}$/.test(str);</pre></td></tr></table></pre>
+export const isAge = (str: any) =&gt; str != undefined &amp;&amp; /^(?:[1-9][0-9]?|1[01][0-9]|120)$/.test(str);
+export const isWx = (str: any) =&gt; str != undefined &amp;&amp; ((/^1[3456789][0-9]{9}$/.test(str) || /^[a-zA-Z]{1}[-_a-zA-Z0-9]{5,19}$/.test(str)));
+export const isMoney = (str: any) =&gt; str != undefined &amp;&amp; /((^[1-9]\d*)|^0)(\.\d{0,2}){0,1}$/.test(str);
+export const isEmail = (str: any) =&gt; str != undefined &amp;&amp; /^([a-zA-Z\d])(\w|\-)+@[a-zA-Z\d]+\.[a-zA-Z]{2,4}$/.test(str);</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Sat Sep 05 2020 10:34:04 GMT+0800 (GMT+08:00)
+                at Fri Oct 09 2020 17:36:29 GMT+0800 (GMT+08:00)
             </div>
         </div>
         <script src="../../prettify.js"></script>

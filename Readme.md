@@ -168,6 +168,9 @@ validator.validate({test: 3}, rules: 'isArray');
 
 ## 更新日志
 
+### 2020/10/09 v1.2.4
+- 修复直接使用各个校验方法对`undefined`的值结果有误的BUG。
+
 ### 2020/09/22 v1.2.3
 - 新增`isNumber`校验规则校验纯数字。
 
