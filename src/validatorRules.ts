@@ -44,5 +44,5 @@ export const isIdcard = (code: any) => {
 };
 export const isAge = (str: any) => str != undefined && /^(?:[1-9][0-9]?|1[01][0-9]|120)$/.test(str);
 export const isWx = (str: any) => str != undefined && ((/^1[3456789][0-9]{9}$/.test(str) || /^[a-zA-Z]{1}[-_a-zA-Z0-9]{5,19}$/.test(str)));
-export const isMoney = (str: any) => str != undefined && /((^[1-9]\d*)|^0)(\.\d{0,2}){0,1}$/.test(str);
+export const isMoney = (str: any) => str != undefined && /((^[1-9]\d*)|^0)(\.\d*){0,1}$/.test(str);
 export const isEmail = (str: any) => str != undefined && /^([a-zA-Z\d])(\w|\-)+@[a-zA-Z\d]+\.[a-zA-Z]{2,4}$/.test(str);

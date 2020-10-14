@@ -167,6 +167,8 @@ validator.validate({test: 3}, rules: 'isArray');
 注意： 校验规则不可命名为`validate`和`addRules`。
 
 ## 更新日志
+### 2020/10/14 v1.2.8
+- 修复金额的校验规则，支持小数点后超过两位的情况。
 
 ### 2020/10/09 v1.2.4
 - 修复直接使用各个校验方法对`undefined`的值结果有误的BUG。

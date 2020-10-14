@@ -208,7 +208,7 @@ exports.isIdcard = function (code) {
 };
 exports.isAge = function (str) { return str != undefined && /^(?:[1-9][0-9]?|1[01][0-9]|120)$/.test(str); };
 exports.isWx = function (str) { return str != undefined && ((/^1[3456789][0-9]{9}$/.test(str) || /^[a-zA-Z]{1}[-_a-zA-Z0-9]{5,19}$/.test(str))); };
-exports.isMoney = function (str) { return str != undefined && /((^[1-9]\d*)|^0)(\.\d{0,2}){0,1}$/.test(str); };
+exports.isMoney = function (str) { return str != undefined && /((^[1-9]\d*)|^0)(\.\d*){0,1}$/.test(str); };
 exports.isEmail = function (str) { return str != undefined && /^([a-zA-Z\d])(\w|\-)+@[a-zA-Z\d]+\.[a-zA-Z]{2,4}$/.test(str); };
 
 

@@ -9,14 +9,10 @@
   <script src="../dist/validator.min.js"></script>
   <script>
     window.onload = () => {
-      const rule10 = [
-        {field: 'email', name: '空', rules: 'isEmpty'}
-      ]
-      const formData = {
-        email: ''
-      }
-      const result = validator.validate(formData, rule10);
-      console.log(result.res, result.msg);   
+      const res1 = validator.isMoney('12');
+      const res2 = validator.isMoney('12.00');
+      const res3 = validator.isMoney('12.000000');
+      console.log(res1, res2, res3);   
     }
   </script>
 </body>
