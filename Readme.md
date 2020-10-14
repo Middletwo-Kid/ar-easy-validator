@@ -72,7 +72,8 @@ console.log(res, msg);       // false 【姓名】格式有误
 | isIdcard   | 身份证          |
 | isAge      | 年龄            |
 | isWx       | 微信            |
-| isMoney    | 金额            |
+| isMoney    | 金额（两位数）            |
+|isMoneyNotLimit | 金额         |
 | isEmail    | 邮箱            |
 | isEmpty    | 是否为空         |
 | validate   | 校验方法        |
@@ -121,7 +122,8 @@ rules可支持字符串、对象和数组：
 | isAge        | 年龄       |
 | isWx         | 微信       |
 | isInt        | 整数       |
-| isMoney      | 金额       |
+| isMoney      | 金额（两位数）       |
+| isMoneyNotLimit | 金额 |
 | isEmail      | 邮箱       |
 | isEmpty      | 是否为空   |
 
