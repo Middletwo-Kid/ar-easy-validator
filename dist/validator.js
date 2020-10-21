@@ -160,7 +160,7 @@ exports.validator = new Validator(validatorRules);
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isEmail = exports.isMoney = exports.isWx = exports.isAge = exports.isIdcard = exports.isBankcard = exports.isCode = exports.isPhone = exports.isNumber = exports.isName = exports.isEmpty = exports.isRequired = void 0;
+exports.isChinese = exports.isEmail = exports.isMoneyNotLimit = exports.isMoney = exports.isWx = exports.isAge = exports.isIdcard = exports.isBankcard = exports.isCode = exports.isPhone = exports.isNumber = exports.isName = exports.isEmpty = exports.isRequired = void 0;
 exports.isRequired = function (str) { return str != undefined && String(str).length > 0; };
 exports.isEmpty = function (str) { return str == null || str === '' || (Array.isArray(str) && str.length == 0) || typeof str == 'undefined' || JSON.stringify(str) == '{}'; };
 exports.isName = function (str) { return str != undefined && /^[\u4E00-\u9FA5]{2,4}$/.test(str); };
@@ -203,13 +203,15 @@ exports.isIdcard = function (code) {
                 msg = "身份证号校验位错误";
             }
         }
-        return code != undefined && pass;
+        return (code != undefined) && pass;
     }
 };
 exports.isAge = function (str) { return str != undefined && /^(?:[1-9][0-9]?|1[01][0-9]|120)$/.test(str); };
 exports.isWx = function (str) { return str != undefined && ((/^1[3456789][0-9]{9}$/.test(str) || /^[a-zA-Z]{1}[-_a-zA-Z0-9]{5,19}$/.test(str))); };
-exports.isMoney = function (str) { return str != undefined && /((^[1-9]\d*)|^0)(\.\d*){0,1}$/.test(str); };
+exports.isMoney = function (str) { return str != undefined && /((^[1-9]\d*)|^0)(\.\d{0,2}){0,1}$/.test(str); };
+exports.isMoneyNotLimit = function (money) { return /((^[1-9]\d*)|^0)(\.\d*){0,1}$/.test(money); };
 exports.isEmail = function (str) { return str != undefined && /^([a-zA-Z\d])(\w|\-)+@[a-zA-Z\d]+\.[a-zA-Z]{2,4}$/.test(str); };
+exports.isChinese = function (str) { return str != undefined && /^[\u4E00-\u9FA5]+$/.test(str); };
 
 
 /***/ }),

@@ -39,7 +39,7 @@ export const isIdcard = (code: any) => {
         msg = "身份证号校验位错误";
       }
     }
-    return code != undefined && pass ;
+    return (code != undefined) && pass ;
   }
 };
 export const isAge = (str: any) => str != undefined && /^(?:[1-9][0-9]?|1[01][0-9]|120)$/.test(str);
@@ -47,3 +47,4 @@ export const isWx = (str: any) => str != undefined && ((/^1[3456789][0-9]{9}$/.t
 export const isMoney = (str: any) => str != undefined && /((^[1-9]\d*)|^0)(\.\d{0,2}){0,1}$/.test(str);
 export const isMoneyNotLimit = (money: string): boolean => /((^[1-9]\d*)|^0)(\.\d*){0,1}$/.test(money);
 export const isEmail = (str: any) => str != undefined && /^([a-zA-Z\d])(\w|\-)+@[a-zA-Z\d]+\.[a-zA-Z]{2,4}$/.test(str);
+export const isChinese = (str: any) => str != undefined && /^[\u4E00-\u9FA5]+$/.test(str);

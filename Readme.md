@@ -76,6 +76,7 @@ console.log(res, msg);       // false 【姓名】格式有误
 |isMoneyNotLimit | 金额         |
 | isEmail    | 邮箱            |
 | isEmpty    | 是否为空         |
+| isChinese    | 是否为中文         |
 | validate   | 校验方法        |
 | addRules   | 自定义校验方法        |
 
@@ -126,6 +127,7 @@ rules可支持字符串、对象和数组：
 | isMoneyNotLimit | 金额 |
 | isEmail      | 邮箱       |
 | isEmpty      | 是否为空   |
+| isChinese    | 是否为中文         |
 
 当rules为对象时， 可传入以下参数：
 
