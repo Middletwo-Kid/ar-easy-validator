@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>validtor</title>
+</head>
+<body>
+  <script src="../dist/validator.js"></script>
+  <script>
+    window.onload = () => {
+      let v = new Validator();
+
+      const u = undefined;
+      const n = null;
+      const us = '';
+      const zero = 0;
+
+      let res1 = v.isEmail(u);
+      let res2 = v.isEmail(n);
+      let res3 = v.isEmail(us);
+      let res4 = v.isEmail(zero);
+      let res5 = v.isEmail('123');
+      let res6 = v.isEmail('123@qq.com');
+
+      console.log(v, res1, res2, res3, res4, res5, res6);
+    }
+  </script>
+</body>
+</html>
