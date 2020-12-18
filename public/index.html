@@ -11,7 +11,8 @@
     window.onload = () => {
       let v = new Validator();
       const formData = {
-        name: '',
+        test: '',
+        name: '梅甜甜',
         money: 15.2,
         age: 18,
         phone: '13800138000',
@@ -20,19 +21,23 @@
         url: 'http://localhost:8080'
       }
 
+      // const rule = {
+      //   money,
+      //   // phone: { rule: 'isPhone'},
+      //   // money: { rule: { '>=': 12 }},
+      //   // age: { rule: ['isNumber', { '>=': 18 }]},
+      //   // score: { 
+      //   //   rule: { ">" : 20 },
+      //   //   need: [
+      //   //     { field: 'job' },
+      //   //     { field: 'name', rule: 'isName' }
+      //   //   ] 
+      //   // },
+      //   // url: { rule: 'isUrl'}
+      // }
+
       const rule = {
-        name,
-        phone: { rule: 'isPhone'},
-        money: { rule: { '>=': 12 }},
-        age: { rule: ['isNumber', { '>=': 18 }]},
-        score: { 
-          rule: { ">" : 20 },
-          need: [
-            { field: 'job' },
-            { field: 'name', rule: 'isName' }
-          ] 
-        },
-        url: { rule: 'isUrl'}
+        name: { rule: 'isRequired' }
       }
 
       const res = v.validate(formData, rule);

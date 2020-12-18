@@ -173,7 +173,7 @@
 
           if(needFlag) {
             flag = checkRule(value, rule, tip);
-            throwResult(flag, field);
+            return throwResult(flag, field);
           }else {
             // 跳出此次循环
             continue;
@@ -181,7 +181,7 @@
         }else {
           // 当没有前置条件的时候，直接判断是否校验成功
           flag = checkRule(value, rule, tip);
-          throwResult(flag, field);
+          return throwResult(flag, field);
         }
       }
     }
@@ -202,10 +202,9 @@
   const formateRules = (rules) => {
     return Object.keys(rules).map(key => {
       let obj = JSON.parse(JSON.stringify(rules[key]));
-      if(obj && hook.isEmpty(obj.rule)) obj.rule = 'isRequired';
+      if(obj && obj instanceof Object && hook.isEmpty(obj.rule)) obj.rule = 'isRequired';
       else if(typeof obj === 'string') {
-        obj = {};
-        obj['rule'] = 'isRequired';
+        throw new Error('rule is invalid');
       }
       obj.field = key;
       return obj;

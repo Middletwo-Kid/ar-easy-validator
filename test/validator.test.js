@@ -580,3 +580,51 @@ describe('test isEmpty', () => {
     expect(v.isEmpty('123')).toBe(false);
   });
 });
+
+
+const rule1 = {
+  name: { rule: 'isRequired' }
+}
+describe('test string validator', () => {
+  it('val = {name: "" }', () => {
+    expect(v.validate({ name: '' }, rule1)).toBe(false);
+  });
+
+  it('val = {name: "王花花" }', () => {
+    expect(v.validate({ name: '王花花' }, rule1 )).toBe(true);
+  });
+});
+
+const rule2 = {
+  score: { rule: { '===': 100 } }
+}
+describe('test object validator', () => {
+  it('val = {score: "" }', () => {
+    expect(v.validate({ score: '' }, rule2)).toBe(false);
+  });
+
+  it('val = {score: 100 }', () => {
+    expect(v.validate({ score: 100 }, rule2 )).toBe(true);
+  });
+
+  it('val = {score: "100" }', () => {
+    expect(v.validate({ score: "100" }, rule2 )).toBe(false);
+  });
+});
+
+const rule3 = {
+  score: { rule: [ 'isNumber', { '===': 100 } ] }
+}
+describe('test array validator', () => {
+  it('val = {score: "" }', () => {
+    expect(v.validate({ score: '' }, rule3)).toBe(false);
+  });
+
+  it('val = {score: 100 }', () => {
+    expect(v.validate({ score: 100 }, rule3 )).toBe(true);
+  });
+
+  it('val = {score: "100" }', () => {
+    expect(v.validate({ score: "100" }, rule3 )).toBe(false);
+  });
+});
