@@ -33,7 +33,6 @@
       return false;
     }
   };
-
   const isRequired = (val) => !isEmpty(val);
   const isEmail = (val) => regex.is_email.test(val);
   const isPhone = (val) => regex.is_phone.test(val);
@@ -45,7 +44,7 @@
   const isMoney = (val) => regex.is_money.test(val);
   const isMoneyNotLimt = (val) => regex.is_moneyNotLimt.test(val);
   const isChinese = (val) => regex.is_chinese.test(val);
-  const isEnglish = (val) => regex.is_english.test(val);
+  const isEnglish = (val) => isRequired(val) && regex.is_english.test(val);
   const isUrl = (val) => regex.is_url.test(val);
   const isFax = (val) => regex.is_fax.test(val);
   const isIp = (val) => regex.is_ip.test(val);
@@ -54,9 +53,9 @@
     let pass = true;
     //验证身份证格式（6个地区编码，8位出生日期，3位顺序号，1位校验位）
     if(!code || !/^\d{6}(18|19|20)?\d{2}(0[1-9]|1[012])(0[1-9]|[12]\d|3[01])\d{3}(\d|[xX])$/.test(code)){
-      pass=false;
+      return false;
     }else if(!city[code.substr(0,2)]){
-      pass=false;
+      return false;
     }else {
       //18位身份证需要验证最后一位校验位
       if(code.length == 18){
@@ -86,6 +85,7 @@
   var hook = {
     regex,
     isRequired,
+    isEmpty,
     isEmail,
     isPhone,
     isName,

@@ -470,8 +470,8 @@ describe('test isIp', () => {
     expect(v.isIp('localhost:8080')).toBe(false);
   });
 
-  it('val = http://127.0.0.0:8080', () => {
-    expect(v.isIp('http://127.0.0.0:8080')).toBe(true);
+  it('val = 127.0.0.0', () => {
+    expect(v.isIp('127.0.0.0')).toBe(true);
   });
 });
 
@@ -510,5 +510,73 @@ describe('test isIdcard', () => {
 
   it('val = 110101199003079198', () => {
     expect(v.isIdcard('110101199003079198')).toBe(true);
+  });
+});
+
+describe('test isRequired', () => {
+  it('val = undefined', () => {
+    expect(v.isRequired(undefined)).toBe(false);
+  });
+
+  it('val = null', () => {
+    expect(v.isRequired(null)).toBe(false);
+  });
+
+  it('val = ""', () => {
+    expect(v.isRequired('')).toBe(false);
+  });
+
+  it('val = 0', () => {
+    expect(v.isRequired(0)).toBe(true);
+  });
+
+  it('val = []', () => {
+    expect(v.isRequired([])).toBe(false);
+  });
+
+  it('val = {}', () => {
+    expect(v.isRequired({})).toBe(false);
+  });
+
+  it('val = NaN', () => {
+    expect(v.isRequired(NaN)).toBe(false);
+  });
+
+  it('val = "123"', () => {
+    expect(v.isRequired('123')).toBe(true);
+  });
+});
+
+describe('test isEmpty', () => {
+  it('val = undefined', () => {
+    expect(v.isEmpty(undefined)).toBe(true);
+  });
+
+  it('val = null', () => {
+    expect(v.isEmpty(null)).toBe(true);
+  });
+
+  it('val = ""', () => {
+    expect(v.isEmpty('')).toBe(true);
+  });
+
+  it('val = 0', () => {
+    expect(v.isEmpty(0)).toBe(false);
+  });
+
+  it('val = []', () => {
+    expect(v.isEmpty([])).toBe(true);
+  });
+
+  it('val = {}', () => {
+    expect(v.isEmpty({})).toBe(true);
+  });
+
+  it('val = NaN', () => {
+    expect(v.isEmpty(NaN)).toBe(true);
+  });
+
+  it('val = "123"', () => {
+    expect(v.isEmpty('123')).toBe(false);
   });
 });
