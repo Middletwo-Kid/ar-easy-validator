@@ -83,7 +83,6 @@
   };
 
   var hook = {
-    regex,
     isRequired,
     isEmpty,
     isEmail,
@@ -106,12 +105,9 @@
   function Validator(){
     const self = this;
 
-    Object.keys(hook.regex).forEach(key => {
-      key = camelCase(key);
+    // 挂载校验方法
+    Object.keys(hook).forEach(key => {
       self[key] = hook[key];
-      self.isRequired = hook.isRequired;
-      self.isEmpty = hook.isEmpty;
-      self.isIdcard = hook.isIdcard;
     });
   }
   Validator.prototype.validate = (formData, rule) => {
@@ -120,11 +116,21 @@
     });
   };
 
-  function camelCase(str){
-    let newArr = str.split('_');
-    const lastKey = ('' + newArr[1]).charAt(0).toUpperCase() + newArr[1].slice(1);
-    return newArr[0] + lastKey;
-  }
+  Validator.prototype.addRules = (validateMethod, fn) => {
+    // 校验名字是否合法
+    if(typeof validateMethod !== 'string' || validateMethod in hook || validateMethod === 'addRules') {
+      console.error("Method's name is invaild");
+      return;
+    }
+
+    // 校验方法是否合法
+    if(typeof fn !== 'function'){
+      console.error("fn is invaild");
+      return;
+    }
+
+    Validator.prototype[validateMethod] = fn;
+  };
 
   return Validator;
 

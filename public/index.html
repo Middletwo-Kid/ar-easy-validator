@@ -10,20 +10,16 @@
   <script>
     window.onload = () => {
       let v = new Validator();
+      let a = 'isInArray';
+      let arr = [1,2,3]
+      v.addRules(a, (val, arr) => {
+        return arr.indexOf(val);
+      });
 
-      const u = undefined;
-      const n = null;
-      const us = '';
-      const zero = 0;
+      console.log(v);
 
-      let res1 = v.isEmail(u);
-      let res2 = v.isEmail(n);
-      let res3 = v.isEmail(us);
-      let res4 = v.isEmail(zero);
-      let res5 = v.isEmail('123');
-      let res6 = v.isEmail('123@qq.com');
-
-      console.log(v, res1, res2, res3, res4, res5, res6);
+      let res = v.isInArray(2, [1,3,2]);
+      console.log(res);
     }
   </script>
 </body>

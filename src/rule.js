@@ -77,7 +77,6 @@ const isIdcard = (code) => {
 };
 
 export default {
-  regex,
   isRequired,
   isEmpty,
   isEmail,
