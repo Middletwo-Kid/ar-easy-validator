@@ -10,15 +10,32 @@
   <script>
     window.onload = () => {
       let v = new Validator();
-      let a = 'isInArray';
-      let arr = [1,2,3]
-      v.addRules(a, (val, arr) => {
-        return arr.indexOf(val);
-      });
+      const formData = {
+        name: '',
+        money: 15.2,
+        age: 18,
+        phone: '13800138000',
+        job: '123',
+        score: 12,
+        url: 'http://localhost:8080'
+      }
 
-      console.log(v);
+      const rule = {
+        name,
+        phone: { rule: 'isPhone'},
+        money: { rule: { '>=': 12 }},
+        age: { rule: ['isNumber', { '>=': 18 }]},
+        score: { 
+          rule: { ">" : 20 },
+          need: [
+            { field: 'job' },
+            { field: 'name', rule: 'isName' }
+          ] 
+        },
+        url: { rule: 'isUrl'}
+      }
 
-      let res = v.isInArray(2, [1,3,2]);
+      const res = v.validate(formData, rule);
       console.log(res);
     }
   </script>
