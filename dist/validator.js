@@ -139,7 +139,9 @@
       // 如果校验规则不为空，但是对象为空，直接返回false
       return false
     }
+    console.log('rules', rules);
     const ruleArr = formateRules(rules);
+    console.log('ruleArr', ruleArr);
 
     for(let i = 0 ; i < ruleArr.length; i++) {
       const item = ruleArr[i];
@@ -157,15 +159,21 @@
           
           // need中的rules不符合规范，直接返回false
           if(!(checkNeed(needRules))) return false;
+          console.log('needRules', needRules);
           
           const needRuleArr = formateNeedRules(needRules);
+          console.log('needRuleArr', needRuleArr);
           let needFlag = true;
 
           for(let j = 0 ; j < needRuleArr.length; j ++ ){
             const needItem = needRuleArr[j];
+            if(!needItem.field){
+              throw new Error('The lack of field in need \'s rule');
+            }
             const needValue = formData[needItem.field];
             const needRule = needItem.rule;
             needFlag = checkRule(needValue, needRule);
+            console.log('needFlag', needFlag);
             if(!needFlag) {
               break;
             }
@@ -202,17 +210,23 @@
   const formateRules = (rules) => {
     return Object.keys(rules).map(key => {
       let obj = JSON.parse(JSON.stringify(rules[key]));
+      let obj1 = JSON.parse(JSON.stringify(rules[key]));
       if(obj && obj instanceof Object && hook.isEmpty(obj.rule)) obj.rule = 'isRequired';
       else if(typeof obj === 'string') {
         throw new Error('rule is invalid');
       }
-      obj.field = key;
+
+      console.log("'field' in obj", 'field' in obj, obj);
+      if(!('field' in obj)) obj.field = key;
+
+      console.log('----', obj.need,obj1.need);
       return obj;
+      
     });
   };
 
   const formateNeedRules = (rules) => {
-
+    console.log('formateNeedRules', rules);
     return rules.map(item => {
       const rule = item.rule;
       if(hook.isEmpty(rule)) item.rule = 'isRequired';
@@ -279,6 +293,8 @@
       return false;
     }
     const val = rule[key];
+
+    console.log('validateObjectRule', value, key, val);
 
     switch (key) {
       case '>': return (+value) > (+val);

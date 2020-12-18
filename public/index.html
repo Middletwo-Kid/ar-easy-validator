@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>validtor</title>
+  <title>validator</title>
 </head>
 <body>
   <script src="../dist/validator.js"></script>
@@ -16,7 +16,7 @@
         money: 15.2,
         age: 18,
         phone: '13800138000',
-        job: '123',
+        job: '',
         score: 12,
         url: 'http://localhost:8080'
       }
@@ -37,7 +37,14 @@
       // }
 
       const rule = {
-        name: { rule: 'isRequired' }
+        // age: { rule: 'isAge'},
+        job: { 
+          rule: 'isRequired', 
+          need: [{
+            field: 'age',
+            rule: ['isAge', { '>=' : 18 } ]
+          }]
+        }
       }
 
       const res = v.validate(formData, rule);

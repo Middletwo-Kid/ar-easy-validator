@@ -628,3 +628,17 @@ describe('test array validator', () => {
     expect(v.validate({ score: "100" }, rule3 )).toBe(false);
   });
 });
+
+const rule4 = {
+  age: { rule: 'isAge'},
+  job: { rule: 'isRequired', need: [ { field: 'age', rule: ['isAge', { '>=' : 18 } ] } ]}
+}
+describe('test need validator', () => {
+  it('val = {age: 12, job: "" }', () => {
+    expect(v.validate({ age: 12, job: "" }, rule4)).toBe(true);
+  });
+
+  it('val = {age: 18, job: "" }', () => {
+    expect(v.validate({ age: 18, job: "" }, rule4)).toBe(false);
+  });
+});
