@@ -26,7 +26,7 @@
     <button @click="handleClick">提交</button>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-  <script src="../dist/validator.js"></script>
+  <script src="../dist/validator.min.js"></script>
   <script>
     var comName=new Vue({
       el:"#app",
@@ -47,14 +47,14 @@
       methods:{
         handleClick(){
           const rule = {
-            // name: { rule:'isName', tip: '请输入正确的姓名' },
-            // age: { rule: 'isAge' },
+            name: { rule:'isName', tip: '请输入正确的姓名' },
+            age: { rule: 'isAge' },
             phone: { rule: ['isRequired', 'isPhone'] },
-            // email: { rule: 'isEmail' },
-            // idcard: { rule: 'isIdcard' },
-            // money: { rule: 'isMoney' },
-            // job: { rule: 'isRequired', need: [ {field: 'age', rule: { ">=" : 18 } } ]},
-            // checkedNames: { rule: 'isSelectJhon', tip: '一定要选择John' },
+            email: { rule: 'isEmail' },
+            idcard: { rule: 'isIdcard' },
+            money: { rule: 'isMoney' },
+            job: { rule: 'isRequired', need: [ {field: 'age', rule: { ">=" : 18 } } ]},
+            checkedNames: { rule: 'isSelectJhon', tip: '一定要选择John' },
           }
 
           let v = new Validator();
