@@ -11,7 +11,6 @@
     <p><label>年龄：</label><input v-model="formData.age" /></p>
     <p><label>电话：</label><input v-model="formData.phone" /></p>
     <p><label>邮箱：</label><input v-model="formData.email" /></p>
-    <p><label>银行卡：</label><input v-model="formData.bankcard" /></p>
     <p><label>身份证：</label><input v-model="formData.idcard" /></p>
     <p><label>金额：</label><input v-model="formData.money" /></p>
     <p><label>职业（当年龄大于18时必填）：</label><input v-model="formData.job" /></p>
@@ -50,21 +49,19 @@
           const rule = {
             // name: { rule:'isName', tip: '请输入正确的姓名' },
             // age: { rule: 'isAge' },
-            // phone: { rule: 'isPhone' },
+            phone: { rule: ['isRequired', 'isPhone'] },
             // email: { rule: 'isEmail' },
             // idcard: { rule: 'isIdcard' },
             // money: { rule: 'isMoney' },
             // job: { rule: 'isRequired', need: [ {field: 'age', rule: { ">=" : 18 } } ]},
-            checkedNames: { rule: 'isSelectJhon', tip: '一定要选择John' },
+            // checkedNames: { rule: 'isSelectJhon', tip: '一定要选择John' },
           }
 
           let v = new Validator();
           v.addRule('isSelectJhon', (val) => {
-            console.log('val', val);
             return Array.isArray(val) && val.includes('John');
           })
           const { res , msg} = v.validate(this.formData, rule);
-          console.log('checkedNames', this.formData.checkedNames);
           alert(msg);
         }
       }

@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75% </span>
+                <span class="strong">75.37% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>99/132</span>
+                <span class='fraction'>101/134</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">65.48% </span>
+                <span class="strong">64.52% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>55/84</span>
+                <span class='fraction'>60/93</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75.21% </span>
+                <span class="strong">75.63% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>88/117</span>
+                <span class='fraction'>90/119</span>
             </div>
         
             
@@ -265,7 +265,17 @@
 <a name='L206'></a><a href='#L206'>206</a>
 <a name='L207'></a><a href='#L207'>207</a>
 <a name='L208'></a><a href='#L208'>208</a>
-<a name='L209'></a><a href='#L209'>209</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L209'></a><a href='#L209'>209</a>
+<a name='L210'></a><a href='#L210'>210</a>
+<a name='L211'></a><a href='#L211'>211</a>
+<a name='L212'></a><a href='#L212'>212</a>
+<a name='L213'></a><a href='#L213'>213</a>
+<a name='L214'></a><a href='#L214'>214</a>
+<a name='L215'></a><a href='#L215'>215</a>
+<a name='L216'></a><a href='#L216'>216</a>
+<a name='L217'></a><a href='#L217'>217</a>
+<a name='L218'></a><a href='#L218'>218</a>
+<a name='L219'></a><a href='#L219'>219</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -273,7 +283,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-yes">18x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -359,11 +369,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -441,6 +457,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -478,7 +498,7 @@ const sign = ['&gt;', '&gt;=', '==', '&lt;', '&lt;=', '!=', '!=='];
 &nbsp;
 function Validator(){
   const self = this;
-&nbsp;
+  
   // 挂载校验方法
   Object.keys(hook).forEach(key =&gt; {
     self[key] = hook[key];
@@ -486,9 +506,9 @@ function Validator(){
 };
 &nbsp;
 // 新增校验方法
-Validator.prototype.addRules = <span class="fstat-no" title="function not covered" >(v</span>alidateMethod, fn) =&gt; {
+Validator.prototype.addRule = <span class="fstat-no" title="function not covered" >(v</span>alidateMethod, fn) =&gt; {
   // 校验名字是否合法
-<span class="cstat-no" title="statement not covered" >  if(typeof validateMethod !== 'string' || validateMethod in hook || validateMethod === 'addRules') {</span>
+<span class="cstat-no" title="statement not covered" >  if(typeof validateMethod !== 'string' || validateMethod in hook || validateMethod === 'addRule') {</span>
 <span class="cstat-no" title="statement not covered" >    console.error("Method's name is invaild");</span>
 <span class="cstat-no" title="statement not covered" >    return;</span>
   }
@@ -550,7 +570,7 @@ Validator.prototype.validate = (formData, rules) =&gt; {
 &nbsp;
         if(needFlag) {
           flag = checkRule(value, rule, tip);
-          if(!flag) return throwResult(flag, field);
+          if(!flag) return throwResult(flag, field, tip);
         }else {
           // 跳出此次循环
           continue;
@@ -558,20 +578,26 @@ Validator.prototype.validate = (formData, rules) =&gt; {
       }else {
         // 当没有前置条件的时候，直接判断是否校验成功
         flag = checkRule(value, rule, tip);
-        if(!flag) return throwResult(flag, field);
+        if(!flag) return throwResult(flag, field, tip);
       }
     }
   }
 &nbsp;
-  return true;
+  return throwResult(true);
 }
 &nbsp;
-const throwResult = (flag, field) =&gt; {
-  <span class="missing-if-branch" title="else path not taken" >E</span>if(!flag) {
-    console.error(`${field} is error`);
-    return false;
+const throwResult = (flag, field, tip = `${field} is error`) =&gt; {
+  if(!flag) {
+    let msg = tip ? tip : <span class="branch-1 cbranch-no" title="branch not covered" >`${field} is error`;</span>
+    return {
+      res: false,
+      msg
+    }
   }else {
-<span class="cstat-no" title="statement not covered" >    return true;</span>
+    return {
+      res: true,
+      msg: 'success'
+    }
   }
 }
 &nbsp;
@@ -638,7 +664,7 @@ const checkNeed = (rules) =&gt; {
 }
 &nbsp;
 const validateStringRule = (value, rule) =&gt; {
-  <span class="missing-if-branch" title="if path not taken" >I</span>if(!(rule in hook)) {
+  <span class="missing-if-branch" title="if path not taken" >I</span>if((!(rule in hook)) &amp;&amp; (<span class="branch-1 cbranch-no" title="branch not covered" >!(rule in Validator.prototype))</span>) {
 <span class="cstat-no" title="statement not covered" >    console.error('rule is invalid');</span>
 <span class="cstat-no" title="statement not covered" >    return false;</span>
   }
@@ -647,8 +673,12 @@ const validateStringRule = (value, rule) =&gt; {
   if(rule !== 'isRequired'){
     flag = hook.isRequired(value);   
   }
-&nbsp;
-  return flag &amp;&amp; hook[rule](value);
+  
+  <span class="missing-if-branch" title="else path not taken" >E</span>if(rule in hook){
+    return flag &amp;&amp; hook[rule](value);
+  }else {
+<span class="cstat-no" title="statement not covered" >    return flag &amp;&amp; Validator.prototype[rule](value);</span>
+  }
 }
 &nbsp;
 const validateObjectRule = (value, rule) =&gt; {
@@ -688,7 +718,7 @@ export default Validator;</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Dec 21 2020 11:53:34 GMT+0800 (中国标准时间)
+                at Mon Dec 21 2020 15:23:34 GMT+0800 (中国标准时间)
             </div>
         </div>
         <script src="prettify.js"></script>

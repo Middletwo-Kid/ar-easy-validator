@@ -69,6 +69,44 @@ describe('test isPhone', () => {
   });
 });
 
+describe('test isWx', () => {
+  it('val = undefined', () => {
+    expect(v.isWx(undefined)).toBe(false);
+  });
+
+  it('val = null', () => {
+    expect(v.isWx(null)).toBe(false);
+  });
+
+  it('val = ""', () => {
+    expect(v.isWx('')).toBe(false);
+  });
+
+  it('val = 0', () => {
+    expect(v.isWx(0)).toBe(false);
+  });
+
+  it('val = []', () => {
+    expect(v.isWx([])).toBe(false);
+  });
+
+  it('val = {}', () => {
+    expect(v.isWx({})).toBe(false);
+  });
+
+  it('val = "123"', () => {
+    expect(v.isWx('123')).toBe(false);
+  });
+
+  it('val = "13800138000"', () => {
+    expect(v.isWx('13800138000')).toBe(true);
+  });
+
+  it('val = "zhu545845"', () => {
+    expect(v.isWx('zhu545845')).toBe(true);
+  });
+});
+
 describe('test isName', () => {
   it('val = undefined', () => {
     expect(v.isName(undefined)).toBe(false);
@@ -587,11 +625,17 @@ const rule1 = {
 }
 describe('test string validator', () => {
   it('val = {name: "" }', () => {
-    expect(v.validate({ name: '' }, rule1)).toBe(false);
+    expect(v.validate({ name: '' }, rule1)).toEqual({
+      res: false,
+      msg: 'name is error'
+    });
   });
 
   it('val = {name: "王花花" }', () => {
-    expect(v.validate({ name: '王花花' }, rule1 )).toBe(true);
+    expect(v.validate({ name: '王花花' }, rule1 )).toEqual({
+      res: true,
+      msg: 'success'
+    });
   });
 });
 
@@ -600,15 +644,24 @@ const rule2 = {
 }
 describe('test object validator', () => {
   it('val = {score: "" }', () => {
-    expect(v.validate({ score: '' }, rule2)).toBe(false);
+    expect(v.validate({ score: '' }, rule2)).toEqual({
+      res: false,
+      msg: 'score is error'
+    });
   });
 
   it('val = {score: 100 }', () => {
-    expect(v.validate({ score: 100 }, rule2 )).toBe(true);
+    expect(v.validate({ score: 100 }, rule2 )).toEqual({
+      res: true,
+      msg: 'success'
+    });
   });
 
   it('val = {score: "100" }', () => {
-    expect(v.validate({ score: "100" }, rule2 )).toBe(false);
+    expect(v.validate({ score: "100" }, rule2 )).toEqual({
+      res: false,
+      msg: 'score is error'
+    });
   });
 });
 
@@ -617,15 +670,24 @@ const rule3 = {
 }
 describe('test array validator', () => {
   it('val = {score: "" }', () => {
-    expect(v.validate({ score: '' }, rule3)).toBe(false);
+    expect(v.validate({ score: '' }, rule3)).toEqual({
+      res: false,
+      msg: 'score is error'
+    });
   });
 
   it('val = {score: 100 }', () => {
-    expect(v.validate({ score: 100 }, rule3 )).toBe(true);
+    expect(v.validate({ score: 100 }, rule3 )).toEqual({
+      res: true,
+      msg: 'success'
+    });
   });
 
   it('val = {score: "100" }', () => {
-    expect(v.validate({ score: "100" }, rule3 )).toBe(false);
+    expect(v.validate({ score: "100" }, rule3 )).toEqual({
+      res: false,
+      msg: 'score is error'
+    });
   });
 });
 
@@ -635,18 +697,30 @@ const rule4 = {
 }
 describe('test need validator', () => {
   it('val = {age: 12, job: "" }', () => {
-    expect(v.validate({ age: 12, job: "" }, rule4)).toBe(true);
+    expect(v.validate({ age: 12, job: "" }, rule4)).toEqual({
+      res: true,
+      msg: 'success'
+    });
   });
 
   it('val = {age: 18, job: "" }', () => {
-    expect(v.validate({ age: 18, job: "" }, rule4)).toBe(false);
+    expect(v.validate({ age: 18, job: "" }, rule4)).toEqual({
+      res: false,
+      msg: 'job is error'
+    });
   });
 
   it('val = {age: "", job: "" }', () => {
-    expect(v.validate({ age: '', job: "" }, rule4)).toBe(false);
+    expect(v.validate({ age: '', job: "" }, rule4)).toEqual({
+      res: false,
+      msg: 'age is error'
+    });
   });
 
   it('val = {age: 20, job: "student" }', () => {
-    expect(v.validate({ age: 20, job: "student" }, rule4)).toBe(true);
+    expect(v.validate({ age: 20, job: "student" }, rule4)).toEqual({
+      res: true,
+      msg: 'success'
+    });
   });
 });
