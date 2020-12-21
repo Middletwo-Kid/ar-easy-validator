@@ -106,16 +106,16 @@
 
   function Validator(){
     const self = this;
-
+    
     // 挂载校验方法
     Object.keys(hook).forEach(key => {
       self[key] = hook[key];
     });
   }
   // 新增校验方法
-  Validator.prototype.addRules = (validateMethod, fn) => {
+  Validator.prototype.addRule = (validateMethod, fn) => {
     // 校验名字是否合法
-    if(typeof validateMethod !== 'string' || validateMethod in hook || validateMethod === 'addRules') {
+    if(typeof validateMethod !== 'string' || validateMethod in hook || validateMethod === 'addRule') {
       console.error("Method's name is invaild");
       return;
     }
@@ -142,9 +142,7 @@
     const ruleArr = formateRules(rules);
 
     for(let i = 0 ; i < ruleArr.length; i++) {
-      console.log('ruleArr[i]', ruleArr[i]);
       const item = ruleArr[i];
-      // console.log('item.field', item.field);
       if(!(item.field in formData)) {
         // 如果这个key不存在formData, 跳过校验
         continue;
@@ -157,7 +155,6 @@
           // 有前置条件，如果通过才进行下一步校验，否则跳过这次的校验    
           
           // need中的rules不符合规范，直接返回false
-          console.log('checkNeed(needRules)', checkNeed(needRules), needRules);
           if(!(checkNeed(needRules))) return false;
           
           const needRuleArr = formateNeedRules(needRules);
@@ -179,7 +176,7 @@
 
           if(needFlag) {
             flag = checkRule(value, rule, tip);
-            if(!flag) return throwResult(flag, field);
+            if(!flag) return throwResult(flag, field, tip);
           }else {
             // 跳出此次循环
             continue;
@@ -187,20 +184,26 @@
         }else {
           // 当没有前置条件的时候，直接判断是否校验成功
           flag = checkRule(value, rule, tip);
-          if(!flag) return throwResult(flag, field);
+          if(!flag) return throwResult(flag, field, tip);
         }
       }
     }
 
-    return true;
+    return throwResult(true);
   };
 
-  const throwResult = (flag, field) => {
+  const throwResult = (flag, field, tip = `${field} is error`) => {
     if(!flag) {
-      console.error(`${field} is error`);
-      return false;
+      let msg = tip ? tip : `${field} is error`;
+      return {
+        res: false,
+        msg
+      }
     }else {
-      return true;
+      return {
+        res: true,
+        msg: 'success'
+      }
     }
   };
 
@@ -267,7 +270,7 @@
   };
 
   const validateStringRule = (value, rule) => {
-    if(!(rule in hook)) {
+    if((!(rule in hook)) && (!(rule in Validator.prototype))) {
       console.error('rule is invalid');
       return false;
     }
@@ -276,8 +279,12 @@
     if(rule !== 'isRequired'){
       flag = hook.isRequired(value);   
     }
-
-    return flag && hook[rule](value);
+    
+    if(rule in hook){
+      return flag && hook[rule](value);
+    }else {
+      return flag && Validator.prototype[rule](value);
+    }
   };
 
   const validateObjectRule = (value, rule) => {
