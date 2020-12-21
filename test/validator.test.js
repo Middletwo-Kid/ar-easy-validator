@@ -641,4 +641,12 @@ describe('test need validator', () => {
   it('val = {age: 18, job: "" }', () => {
     expect(v.validate({ age: 18, job: "" }, rule4)).toBe(false);
   });
+
+  it('val = {age: "", job: "" }', () => {
+    expect(v.validate({ age: '', job: "" }, rule4)).toBe(false);
+  });
+
+  it('val = {age: 20, job: "student" }', () => {
+    expect(v.validate({ age: 20, job: "student" }, rule4)).toBe(true);
+  });
 });

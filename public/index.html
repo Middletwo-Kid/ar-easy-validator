@@ -14,11 +14,15 @@
         test: '',
         name: '梅甜甜',
         money: 15.2,
-        age: 18,
         phone: '13800138000',
-        job: '',
         score: 12,
-        url: 'http://localhost:8080'
+        url: 'http://localhost:8080',
+
+        age: 18,
+        job: '',
+
+        // age: '',
+        // job: ''
       }
 
       // const rule = {
@@ -37,7 +41,7 @@
       // }
 
       const rule = {
-        // age: { rule: 'isAge'},
+        age: { rule: 'isAge'},
         job: { 
           rule: 'isRequired', 
           need: [{
