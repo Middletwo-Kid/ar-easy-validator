@@ -35,3 +35,5 @@ export const CITY ={
   82: '澳门',
   91: '国外 '
 };
+
+export const SIGN = [ '>', '<', '>=', '<=', '==', '==='];

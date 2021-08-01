@@ -1,9 +1,10 @@
+import { SIGN } from './constanst';
 
-const checkIsObject = (values) => {
-  return typeof values !== 'object' && Object.prototype.toString.call(values) !== '[object Object]';
+function checkIsObject(values) {
+  return typeof values === 'object' && Object.prototype.toString.call(values) === '[object Object]';
 }
 
-const checkParameter = (values, rules) => {
+function checkParameter(values, rules){
   try {
     if(!values || !checkIsObject(values)){
       throw new Error(`parameter values is invalid in validate, it should be an object`);
@@ -15,21 +16,13 @@ const checkParameter = (values, rules) => {
   }
 }
 
-const checkRule = (field, rules, need, tip) => {
+function checkRule(field, rules, need, tip){
   try {
-    if(!field){
+    if(!field || typeof field !== 'string'){
       throw new Error(`field is invaild in rules's item`);
     }
 
-    const type = typeof rules;
-
-    if(type !== 'string' || !checkIsObject(rules) || !Array.isArray(rules)){
-      throw new Error(`rules is invaild in rules's item`);
-    }
-
-    // 如果string 需要判断是否存在
-    // 如果object, 
-    // 如果是数组， 遍历判断内部
+    isVaildRule.call(this, rules);
 
     if(need && !Array.isArray(need)){
       throw new Error(`need is invaild in rules's item`);
@@ -41,6 +34,36 @@ const checkRule = (field, rules, need, tip) => {
 
   } catch (error) {
     console.error(error);
+  }
+}
+
+function isVaildRule(rules){
+  const type = typeof rules;
+
+  if(type !== 'string' 
+    && !checkIsObject(rules) 
+    && !Array.isArray(rules)){
+    throw new Error(`rules should be string or object or array`);
+  } else if(type === 'string' && ((rules === 'validate' || rules === 'addRule') || !this.hasOwnProperty(rules))){
+    throw new Error(`rules doesn't exist`);
+  } else if(type === 'object' && !Array.isArray(rules)){
+    const keys = Object.keys(rules);
+    if(keys.length === 0 || keys.length > 1){
+      throw new Error(`rules is invaild`);
+    } else if(!SIGN.includes(keys[0])){
+      throw new Error(`when rules is an object, rules'key should be on of [ ${SIGN.join(', ')} ]`);
+    }
+  } else if(Array.isArray(rules) && rules.length > 0){
+    for(let i = 0; i < rules.length; i++){
+      const rule = rules[i];
+
+      // check the rule of rules, but omitting the array
+      if(typeof rule === 'string' || checkIsObject(rule)){
+        isVaildRule.call(this, rule);
+      }else {
+        throw new Error(`when rules is an array, it' children should be string or an object`);
+      }
+    }
   }
 }
 
@@ -66,11 +89,11 @@ function validate(values, rules){
 
     try {
       const { field, rules, need, tip } = rule;
-      checkRule(field, rules, need, tip);
+      checkRule.call(this, field, rules, need, tip);
 
-      if(Object.prototype.hasOwnProperty(field)){
-        checkValue(values[field], rules, need, tip);
-      }
+      // if(Object.prototype.hasOwnProperty(field)){
+      //   checkValue.call(this, values[field], rules, need, tip);
+      // }
       
     } catch (error) {
       console.error(error);
