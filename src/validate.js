@@ -22,7 +22,9 @@ function checkRule(field, rules, need, tip){
       throw new Error(`field is invaild in rules's item`);
     }
 
-    isVaildRule.call(this, rules);
+    if(rules){
+      isVaildRule.call(this, rules);
+    }
 
     if(need && !Array.isArray(need)){
       throw new Error(`need is invaild in rules's item`);
@@ -67,13 +69,31 @@ function isVaildRule(rules){
   }
 }
 
-const checkValue = (value, valueRules, need, tip) => {
+function checkValue(value, valueRules, need, tip){
   try {
+    let shouldCheck = true;
+
     if(need){
       for(let i = 0; i < need.length; i++){
         const needRule = need[i];
         const { field, rules } = needRule;
-        checkRule(field, rules);
+        checkRule.call(this, field, rules);
+
+        // 接下来校验need中的条件是否满足
+        if(this.hasOwnProperty(field)){
+          const needValue = this[field];
+          const type = typeof rules;
+
+          if(type === 'string'){
+            shouldCheck = this[rules](needValue);
+          }else if(type === 'object'){
+            // > >= == === < <=
+            const compareKey = Object.keys(rules)[0];
+            const compareValue = rules[compareKey];
+
+            
+          }
+        }
       }
     }
   } catch (error) {
@@ -91,9 +111,9 @@ function validate(values, rules){
       const { field, rules, need, tip } = rule;
       checkRule.call(this, field, rules, need, tip);
 
-      // if(Object.prototype.hasOwnProperty(field)){
-      //   checkValue.call(this, values[field], rules, need, tip);
-      // }
+      if(values.hasOwnProperty(field)){
+        checkValue.call(this, values[field], rules, need, tip);
+      }
       
     } catch (error) {
       console.error(error);

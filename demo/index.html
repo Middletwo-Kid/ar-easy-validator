@@ -9,7 +9,12 @@
 <body>
   <script src="../dist/validator.js"></script>
   <script>
-    Validator.validate({}, [{field: 'name', rules: [{'===123': '123'}]}]);
+    const rule = [
+      { field: 'name', need: [{field: 'age', rules: ['isRequired', {"<=": 17}]}] }
+    ]
+    Validator.validate({
+      name: 'test'
+    }, rule);
   </script>
 </body>
 </html>
