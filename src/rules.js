@@ -38,7 +38,7 @@ const is = (x, y) => {
   }
 }
 
-const isEqual = (x, y) => {
+export const isEqual = (x, y) => {
   if(is(x, y)) return true;
 
   if(typeof x !== 'object'

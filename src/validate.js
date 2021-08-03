@@ -1,22 +1,23 @@
 import { SIGN } from './constanst';
+import { isEqual } from './rules';
 
 function checkIsObject(values) {
   return typeof values === 'object' && Object.prototype.toString.call(values) === '[object Object]';
 }
 
-function checkParameter(values, rules){
+function checkValidateParameter(values, rules){
   try {
     if(!values || !checkIsObject(values)){
       throw new Error(`parameter values is invalid in validate, it should be an object`);
     }else if(!rules || !Array.isArray(rules)){
-      throw new Error(`parameter rules is invalid in validate`);
+      throw new Error(`parameter rules is invalid in validate, it should be string、object or array`);
     }
   } catch (error) {
     console.error(error);
   }
 }
 
-function checkRule(field, rules, need, tip){
+function checkRuleParameter(field, rules, need, tip){
   try {
     if(!field || typeof field !== 'string'){
       throw new Error(`field is invaild in rules's item`);
@@ -69,55 +70,121 @@ function isVaildRule(rules){
   }
 }
 
-function checkValue(value, valueRules, need, tip){
+function vaild(value, rules){
+  const type = typeof rules;
+
+  if(type === 'string'){
+    return validRuleByString.call(this, value, rules);
+  }else if(Array.isArray(rules)){
+    return validRuleByArray.call(this, value, rules);
+  }else {
+    const key = Object.keys(rules)[0];
+    const keyVal = rules[key];
+    return validRuleByObject(value, key, keyVal);
+  }
+}
+
+function validRuleByString(value, rule){
+  return this[rule](value);
+}
+
+function validRuleByObject(value, sign, signVal){  
+  switch(sign){
+    case '>': return value > signVal;
+    case '>=': return value >= signVal;
+    case '<': return value < signVal;
+    case '<=': return value <= signVal;
+    case '==': return value == signVal;
+    default: {
+      if(typeof value === 'object' && !Array.isArray(value)){
+        return value === signVal;
+      }else {
+        return isEqual(value, signVal);
+      }
+    };
+  }
+}
+
+function validRuleByArray(needValue, needRules){
+  let shouldCheck = true;
+
+  for(let i = 0; i < needRules.length; i++){
+    const rule = needRules[i]; 
+    const type = typeof rule;
+
+    if(type === 'string'){
+      shouldCheck = validRuleByString.call(this, needValue, rule);
+    }else {
+      const key = Object.keys(rule)[0];
+      const keyVal = rule[key];
+      shouldCheck = validRuleByObject(needValue, key, keyVal);
+    }
+
+    if(!shouldCheck) return false;
+  }
+  
+  return true;
+}
+
+function checkValue(values, currentValue, currentRules, need){
   try {
     let shouldCheck = true;
 
-    if(need){
+    if(need && need.length > 0){
       for(let i = 0; i < need.length; i++){
         const needRule = need[i];
         const { field, rules } = needRule;
-        checkRule.call(this, field, rules);
+        checkRuleParameter.call(this, field, rules);
 
-        // 接下来校验need中的条件是否满足
-        if(this.hasOwnProperty(field)){
-          const needValue = this[field];
-          const type = typeof rules;
-
-          if(type === 'string'){
-            shouldCheck = this[rules](needValue);
-          }else if(type === 'object'){
-            // > >= == === < <=
-            const compareKey = Object.keys(rules)[0];
-            const compareValue = rules[compareKey];
-
-            
-          }
+        if(values.hasOwnProperty(field)){
+          const needValue = values[field];
+          shouldCheck = vaild.call(this, needValue, rules);
         }
       }
     }
+
+    if(!shouldCheck) return true;
+    if(!currentRules) currentRules = 'isRequired';
+    return vaild.call(this, currentValue, currentRules);
   } catch (error) {
-    
+    console.log(error);
   }
 }
 
 function validate(values, rules){
-  checkParameter(values, rules);
+  checkValidateParameter(values, rules);
 
   for(let i = 0; i < rules.length; i++){
     const rule = rules[i];
 
     try {
       const { field, rules, need, tip } = rule;
-      checkRule.call(this, field, rules, need, tip);
+      checkRuleParameter.call(this, field, rules, need, tip);
 
       if(values.hasOwnProperty(field)){
-        checkValue.call(this, values[field], rules, need, tip);
+        let flag = checkValue.call(this, values, values[field], rules, need);
+        if(!flag){
+          const msg = tip ? tip : `${field} is error`;
+          return {
+            res: false,
+            msg
+          }
+        } else {
+          return {
+            res: true,
+            msg: 'success'
+          }
+        }
       }
       
     } catch (error) {
       console.error(error);
     }
+  }
+
+  return {
+    res: true,
+    msg: 'success'
   }
 }
 

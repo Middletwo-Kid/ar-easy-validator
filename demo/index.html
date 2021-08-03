@@ -10,11 +10,13 @@
   <script src="../dist/validator.js"></script>
   <script>
     const rule = [
-      { field: 'name', need: [{field: 'age', rules: ['isRequired', {"<=": 17}]}] }
+      { field: 'name', need: [{field: 'age', rules: ['isRequired', {'>=': 18}] }]}
     ]
-    Validator.validate({
-      name: 'test'
+    let { res, msg } = Validator.validate({
+      name: '',
+      age: '18'
     }, rule);
+    console.log({ res, msg })
   </script>
 </body>
 </html>

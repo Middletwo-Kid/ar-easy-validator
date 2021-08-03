@@ -173,10 +173,12 @@
     isIdcard
   };
 
+  // check it is an object
   function checkIsObject(values) {
     return typeof values === 'object' && Object.prototype.toString.call(values) === '[object Object]';
   }
 
+  // check values and rules
   function checkParameter(values, rules){
     try {
       if(!values || !checkIsObject(values)){
@@ -189,6 +191,7 @@
     }
   }
 
+  // check rule of rules
   function checkRule(field, rules, need, tip){
     try {
       if(!field || typeof field !== 'string'){
@@ -212,6 +215,12 @@
     }
   }
 
+  // [
+  //   { field: 'name'},
+  //   { field: 'name', rules: 'isRequired'},
+  //   { field: 'name', rules: { '===': 'sugarMei'}},
+  //   { field: 'name', rules: ['isRequired', { '===': 'sugarMei'}]},
+  // ]
   function isVaildRule(rules){
     const type = typeof rules;
 
@@ -242,17 +251,90 @@
     }
   }
 
-  function checkValue(value, valueRules, need, tip){
+  // 要校验的值和规则
+  function vaild(value, rules){
+    const type = typeof rules;
+
+    if(type === 'string'){
+      return validRuleByString.call(this, value, rules);
+    }else if(Array.isArray(rules)){
+      return validRuleByArray.call(this, value, rules);
+    }else {
+      const key = Object.keys(rules)[0];
+      const keyVal = rules[key];
+      return validRuleByObject(value, key, keyVal);
+    }
+  }
+
+  // 当校验规则为string时的比较逻辑
+  function validRuleByString(value, rule){
+    return this[rule](value);
+  }
+
+  // 当校验规则为object时的比较逻辑
+  function validRuleByObject(value, sign, signVal){  
+    switch(sign){
+      case '>': return value > signVal;
+      case '>=': return value >= signVal;
+      case '<': return value < signVal;
+      case '<=': return value <= signVal;
+      case '==': return value == signVal;
+      default: {
+        if(typeof value === 'object' && !Array.isArray(value)){
+          return value === signVal;
+        }else {
+          return isEqual(value, signVal);
+        }
+      }  }
+  }
+
+  function validRuleByArray(needValue, needRules){
+    let shouldCheck = true;
+
+    for(let i = 0; i < needRules.length; i++){
+      const rule = needRules[i]; 
+      const type = typeof rule;
+
+      if(type === 'string'){
+        shouldCheck = validRuleByString.call(this, needValue, rule);
+      }else {
+        const key = Object.keys(rule)[0];
+        const keyVal = rule[key];
+        shouldCheck = validRuleByObject(needValue, key, keyVal);
+      }
+
+      if(!shouldCheck) return false;
+    }
+    
+    return true;
+  }
+
+  // values: 比较的对象值
+  // currentValue: 当前校验的field对应的值
+  // currentRules: 当前校验的field对应的校验规则
+  // tip: 报错信息
+  function checkValue(values, currentValue, currentRules, need){
     try {
-      if(need){
+      let shouldCheck = true;
+
+      if(need && need.length > 0){
         for(let i = 0; i < need.length; i++){
           const needRule = need[i];
           const { field, rules } = needRule;
           checkRule.call(this, field, rules);
+
+          if(values.hasOwnProperty(field)){
+            const needValue = values[field];
+            shouldCheck = vaild.call(this, needValue, rules);
+          }
         }
       }
+
+      if(!shouldCheck) return true;
+      if(!currentRules) currentRules = 'isRequired';
+      return vaild.call(this, currentValue, currentRules);
     } catch (error) {
-      
+      console.log(error);
     }
   }
 
@@ -267,7 +349,20 @@
         checkRule.call(this, field, rules, need, tip);
 
         if(values.hasOwnProperty(field)){
-          checkValue.call(this, values[field], rules, need, tip);
+          let flag = checkValue.call(this, values, values[field], rules, need);
+          if(!flag){
+            const msg = tip ? tip : `${field} is error`;
+            console.log(tip, '------');
+            return {
+              res: false,
+              msg
+            }
+          } else {
+            return {
+              res: true,
+              msg: 'success'
+            }
+          }
         }
         
       } catch (error) {
