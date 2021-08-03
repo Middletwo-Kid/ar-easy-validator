@@ -5,12 +5,11 @@ const regex = {
   is_mobile: /^1[3456789][0-9]{9}$/,
   is_concat: /(^(\d{3,4}-)?\d{6,8}$)|(^1[3456789][0-9]{9}$)/,
   is_name: /^[\u4E00-\u9FA5]{2,4}$/,
-  is_number: /^[0-9]+$/,
-  is_code: /^[0-9]{6}$/,
+  is_number: /^\d+$|^\d*\.\d+$/,
   is_bankcard: /^[0-9]{16,19}$/,
   is_age: /^(?:[1-9][0-9]?|1[01][0-9]|120)$/,
   is_money: /((^[1-9]\d*)|^0)(\.\d{0,2}){0,1}$/,
-  is_int: /^-?[1-9]\d*$/,
+  is_positive_int: /^[0-9]+$/,
   is_chinese: /^[\u4E00-\u9FA5]+$/,
   is_english: /^[A-Za-z]+$/,
   is_url: /[a-zA-z]+:\/\/[^\s]/,
@@ -69,10 +68,10 @@ const isRequired = (val) => !isEmpty(val);
 const isEmail = (val) => regex.is_email.test(val);
 const isMobile = (val) => regex.is_mobile.test(val);
 const isConcat = (val) => regex.is_concat.test(val);
-const isWx = (val) => regex.is_mobile.test(val) || /^[a-zA-Z]{1}[-_a-zA-Z0-9]{5,19}$/.test(val);
+const isWx = (val) => regex.is_mobile.test(val) || /^[a-zA-Z][a-zA-Z\d_-]{5,19}$/.test(val);
 const isName = (val) => regex.is_name.test(val);
 const isNumber = (val) => regex.is_number.test(val);
-const isInt = (val) => regex.is_int.test(val);
+const isPositiveInt = (val) => regex.is_positive_int.test(val);
 const isBankcard = (val) => regex.is_bankcard.test(val);
 const isAge = (val) => regex.is_age.test(val);
 const isMoney = (val) => regex.is_money.test(val);
@@ -119,7 +118,7 @@ export default {
   isWx,
   isName,
   isNumber,
-  isInt,
+  isPositiveInt,
   isBankcard,
   isAge,
   isMoney,
