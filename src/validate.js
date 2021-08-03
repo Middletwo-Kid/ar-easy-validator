@@ -111,10 +111,10 @@ function validRuleByArray(needValue, needRules){
   for(let i = 0; i < needRules.length; i++){
     const rule = needRules[i]; 
     const type = typeof rule;
-
+    
     if(type === 'string'){
       shouldCheck = validRuleByString.call(this, needValue, rule);
-    }else {
+    }else if(type === 'object' && !Array.isArray(rule)){
       const key = Object.keys(rule)[0];
       const keyVal = rule[key];
       shouldCheck = validRuleByObject(needValue, key, keyVal);
