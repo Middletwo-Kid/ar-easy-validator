@@ -49,12 +49,11 @@
     is_mobile: /^1[3456789][0-9]{9}$/,
     is_concat: /(^(\d{3,4}-)?\d{6,8}$)|(^1[3456789][0-9]{9}$)/,
     is_name: /^[\u4E00-\u9FA5]{2,4}$/,
-    is_number: /^[0-9]+$/,
-    is_code: /^[0-9]{6}$/,
+    is_number: /^\d+$|^\d*\.\d+$/,
     is_bankcard: /^[0-9]{16,19}$/,
     is_age: /^(?:[1-9][0-9]?|1[01][0-9]|120)$/,
     is_money: /((^[1-9]\d*)|^0)(\.\d{0,2}){0,1}$/,
-    is_int: /^-?[1-9]\d*$/,
+    is_positive_int: /^[0-9]+$/,
     is_chinese: /^[\u4E00-\u9FA5]+$/,
     is_english: /^[A-Za-z]+$/,
     is_url: /[a-zA-z]+:\/\/[^\s]/,
@@ -113,10 +112,10 @@
   const isEmail = (val) => regex.is_email.test(val);
   const isMobile = (val) => regex.is_mobile.test(val);
   const isConcat = (val) => regex.is_concat.test(val);
-  const isWx = (val) => regex.is_mobile.test(val) || /^[a-zA-Z]{1}[-_a-zA-Z0-9]{5,19}$/.test(val);
+  const isWx = (val) => regex.is_mobile.test(val) || /^[a-zA-Z][a-zA-Z\d_-]{5,19}$/.test(val);
   const isName = (val) => regex.is_name.test(val);
   const isNumber = (val) => regex.is_number.test(val);
-  const isInt = (val) => regex.is_int.test(val);
+  const isPositiveInt = (val) => regex.is_positive_int.test(val);
   const isBankcard = (val) => regex.is_bankcard.test(val);
   const isAge = (val) => regex.is_age.test(val);
   const isMoney = (val) => regex.is_money.test(val);
@@ -163,7 +162,7 @@
     isWx,
     isName,
     isNumber,
-    isInt,
+    isPositiveInt,
     isBankcard,
     isAge,
     isMoney,
@@ -173,54 +172,37 @@
     isIdcard
   };
 
-  // check it is an object
   function checkIsObject(values) {
     return typeof values === 'object' && Object.prototype.toString.call(values) === '[object Object]';
   }
 
-  // check values and rules
-  function checkParameter(values, rules){
-    try {
-      if(!values || !checkIsObject(values)){
-        throw new Error(`parameter values is invalid in validate, it should be an object`);
-      }else if(!rules || !Array.isArray(rules)){
-        throw new Error(`parameter rules is invalid in validate`);
-      }
-    } catch (error) {
-      console.error(error);
+  function checkValidateParameter(values, rules){
+    if(!values || !checkIsObject(values)){
+      throw new Error(`parameter values is invalid in validate, it should be an object`);
+    }else if(!Array.isArray(rules)){
+      throw new Error(`parameter rules is invalid in validate, it should be an array`);
+    }
+    return true;
+  }
+
+  function checkRuleParameter(field, rules, need, tip){
+    if(!field || typeof field !== 'string'){
+      throw new Error(`field is invaild in rules's item`);
+    }
+
+    if(rules){
+      isVaildRule.call(this, rules);
+    }
+
+    if(need && !Array.isArray(need)){
+      throw new Error(`need is invaild in rules's item`);
+    }
+
+    if(tip && typeof tip !== 'string'){
+      throw new Error(`tip is invaild in rules's item`);
     }
   }
 
-  // check rule of rules
-  function checkRule(field, rules, need, tip){
-    try {
-      if(!field || typeof field !== 'string'){
-        throw new Error(`field is invaild in rules's item`);
-      }
-
-      if(rules){
-        isVaildRule.call(this, rules);
-      }
-
-      if(need && !Array.isArray(need)){
-        throw new Error(`need is invaild in rules's item`);
-      }
-
-      if(tip && typeof tip !== 'string'){
-        throw new Error(`tip is invaild in rules's item`);
-      }
-
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  // [
-  //   { field: 'name'},
-  //   { field: 'name', rules: 'isRequired'},
-  //   { field: 'name', rules: { '===': 'sugarMei'}},
-  //   { field: 'name', rules: ['isRequired', { '===': 'sugarMei'}]},
-  // ]
   function isVaildRule(rules){
     const type = typeof rules;
 
@@ -251,7 +233,6 @@
     }
   }
 
-  // 要校验的值和规则
   function vaild(value, rules){
     const type = typeof rules;
 
@@ -266,18 +247,17 @@
     }
   }
 
-  // 当校验规则为string时的比较逻辑
   function validRuleByString(value, rule){
     return this[rule](value);
   }
 
-  // 当校验规则为object时的比较逻辑
   function validRuleByObject(value, sign, signVal){  
     switch(sign){
       case '>': return value > signVal;
       case '>=': return value >= signVal;
       case '<': return value < signVal;
       case '<=': return value <= signVal;
+      // todo 考虑优化一下 == 和 === 的判断逻辑
       case '==': return value == signVal;
       default: {
         if(typeof value === 'object' && !Array.isArray(value)){
@@ -294,10 +274,10 @@
     for(let i = 0; i < needRules.length; i++){
       const rule = needRules[i]; 
       const type = typeof rule;
-
+      
       if(type === 'string'){
         shouldCheck = validRuleByString.call(this, needValue, rule);
-      }else {
+      }else if(type === 'object' && !Array.isArray(rule)){
         const key = Object.keys(rule)[0];
         const keyVal = rule[key];
         shouldCheck = validRuleByObject(needValue, key, keyVal);
@@ -309,50 +289,51 @@
     return true;
   }
 
-  // values: 比较的对象值
-  // currentValue: 当前校验的field对应的值
-  // currentRules: 当前校验的field对应的校验规则
-  // tip: 报错信息
   function checkValue(values, currentValue, currentRules, need){
-    try {
-      let shouldCheck = true;
+    let shouldCheck = true;
 
-      if(need && need.length > 0){
-        for(let i = 0; i < need.length; i++){
-          const needRule = need[i];
-          const { field, rules } = needRule;
-          checkRule.call(this, field, rules);
+    if(need && need.length > 0){
+      for(let i = 0; i < need.length; i++){
+        const needRule = need[i];
 
-          if(values.hasOwnProperty(field)){
-            const needValue = values[field];
-            shouldCheck = vaild.call(this, needValue, rules);
-          }
+        if(!needRule.hasOwnProperty('field')){
+          throw new Error(`field isn't exist`);
+        }
+
+        let { field, rules } = needRule;
+        if(!rules) rules = 'isRequired';
+        checkRuleParameter.call(this, field, rules);
+
+        if(values.hasOwnProperty(field)){
+          const needValue = values[field];
+          shouldCheck = vaild.call(this, needValue, rules);
         }
       }
-
-      if(!shouldCheck) return true;
-      if(!currentRules) currentRules = 'isRequired';
-      return vaild.call(this, currentValue, currentRules);
-    } catch (error) {
-      console.log(error);
     }
+
+    if(!shouldCheck) return true;
+    if(!currentRules) currentRules = 'isRequired';
+    return vaild.call(this, currentValue, currentRules);
   }
 
-  function validate(values, rules){
-    checkParameter(values, rules);
+  function validate(values, ruleArr){
+    try {
+      checkValidateParameter(values, ruleArr);
 
-    for(let i = 0; i < rules.length; i++){
-      const rule = rules[i];
+      for(let i = 0; i < ruleArr.length; i++){
+        const rule = ruleArr[i];
 
-      try {
+        if(!rule.hasOwnProperty('field')){
+          throw new Error(`field isn't exist`);
+        }
+
         const { field, rules, need, tip } = rule;
-        checkRule.call(this, field, rules, need, tip);
+        checkRuleParameter.call(this, field, rules, need, tip);
 
         if(values.hasOwnProperty(field)){
           let flag = checkValue.call(this, values, values[field], rules, need);
           if(!flag){
             const msg = tip ? tip : `${field} is error`;
-            console.log(tip, '------');
             return {
               res: false,
               msg
@@ -364,9 +345,12 @@
             }
           }
         }
-        
-      } catch (error) {
-        console.error(error);
+      }
+    } catch (error) {
+      console.error(error);
+      return {
+        res: false,
+        msg: 'failure'
       }
     }
   }

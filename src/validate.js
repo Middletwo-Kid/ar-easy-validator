@@ -6,37 +6,29 @@ function checkIsObject(values) {
 }
 
 function checkValidateParameter(values, rules){
-  try {
-    if(!values || !checkIsObject(values)){
-      throw new Error(`parameter values is invalid in validate, it should be an object`);
-    }else if(!rules || !Array.isArray(rules)){
-      throw new Error(`parameter rules is invalid in validate, it should be string、object or array`);
-    }
-  } catch (error) {
-    console.error(error);
+  if(!values || !checkIsObject(values)){
+    throw new Error(`parameter values is invalid in validate, it should be an object`);
+  }else if(!Array.isArray(rules)){
+    throw new Error(`parameter rules is invalid in validate, it should be an array`);
   }
+  return true;
 }
 
 function checkRuleParameter(field, rules, need, tip){
-  try {
-    if(!field || typeof field !== 'string'){
-      throw new Error(`field is invaild in rules's item`);
-    }
+  if(!field || typeof field !== 'string'){
+    throw new Error(`field is invaild in rules's item`);
+  }
 
-    if(rules){
-      isVaildRule.call(this, rules);
-    }
+  if(rules){
+    isVaildRule.call(this, rules);
+  }
 
-    if(need && !Array.isArray(need)){
-      throw new Error(`need is invaild in rules's item`);
-    }
+  if(need && !Array.isArray(need)){
+    throw new Error(`need is invaild in rules's item`);
+  }
 
-    if(tip && typeof tip !== 'string'){
-      throw new Error(`tip is invaild in rules's item`);
-    }
-
-  } catch (error) {
-    console.error(error);
+  if(tip && typeof tip !== 'string'){
+    throw new Error(`tip is invaild in rules's item`);
   }
 }
 
@@ -94,6 +86,7 @@ function validRuleByObject(value, sign, signVal){
     case '>=': return value >= signVal;
     case '<': return value < signVal;
     case '<=': return value <= signVal;
+    // todo 考虑优化一下 == 和 === 的判断逻辑
     case '==': return value == signVal;
     default: {
       if(typeof value === 'object' && !Array.isArray(value)){
@@ -127,37 +120,43 @@ function validRuleByArray(needValue, needRules){
 }
 
 function checkValue(values, currentValue, currentRules, need){
-  try {
-    let shouldCheck = true;
+  let shouldCheck = true;
 
-    if(need && need.length > 0){
-      for(let i = 0; i < need.length; i++){
-        const needRule = need[i];
-        const { field, rules } = needRule;
-        checkRuleParameter.call(this, field, rules);
+  if(need && need.length > 0){
+    for(let i = 0; i < need.length; i++){
+      const needRule = need[i];
 
-        if(values.hasOwnProperty(field)){
-          const needValue = values[field];
-          shouldCheck = vaild.call(this, needValue, rules);
-        }
+      if(!needRule.hasOwnProperty('field')){
+        throw new Error(`field isn't exist`);
+      }
+
+      let { field, rules } = needRule;
+      if(!rules) rules = 'isRequired';
+      checkRuleParameter.call(this, field, rules);
+
+      if(values.hasOwnProperty(field)){
+        const needValue = values[field];
+        shouldCheck = vaild.call(this, needValue, rules);
       }
     }
-
-    if(!shouldCheck) return true;
-    if(!currentRules) currentRules = 'isRequired';
-    return vaild.call(this, currentValue, currentRules);
-  } catch (error) {
-    console.log(error);
   }
+
+  if(!shouldCheck) return true;
+  if(!currentRules) currentRules = 'isRequired';
+  return vaild.call(this, currentValue, currentRules);
 }
 
-function validate(values, rules){
-  checkValidateParameter(values, rules);
+function validate(values, ruleArr){
+  try {
+    checkValidateParameter(values, ruleArr);
 
-  for(let i = 0; i < rules.length; i++){
-    const rule = rules[i];
+    for(let i = 0; i < ruleArr.length; i++){
+      const rule = ruleArr[i];
 
-    try {
+      if(!rule.hasOwnProperty('field')){
+        throw new Error(`field isn't exist`);
+      }
+
       const { field, rules, need, tip } = rule;
       checkRuleParameter.call(this, field, rules, need, tip);
 
@@ -176,15 +175,13 @@ function validate(values, rules){
           }
         }
       }
-      
-    } catch (error) {
-      console.error(error);
     }
-  }
-
-  return {
-    res: true,
-    msg: 'success'
+  } catch (error) {
+    console.error(error);
+    return {
+      res: false,
+      msg: 'failure'
+    }
   }
 }
 
