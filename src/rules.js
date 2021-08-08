@@ -42,7 +42,7 @@ export const isEqual = (x, y) => {
 
   if(typeof x !== 'object'
     || x === null
-    || y !== 'object'
+    || typeof y !== 'object'
     || y === null){
       return false;
   }

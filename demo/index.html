@@ -9,9 +9,40 @@
 <body>
   <script src="../dist/validator.js"></script>
   <script>
-    const rules = [{ field: 'job', need: [{field: 'age'}] }];
-    let { res, msg } = Validator.validate({age: '', job: ''}, rules);
-    console.log({ res, msg })
+    const formData = {
+        name: '姓名',
+        sex: '',
+        age: 18,
+        isStudent: 0,
+        job: ''
+    };
+    const formDataRules = [
+        // name必须符合名字规则
+        { field: 'name', name: '姓名', rules: 'isName'},
+        // sex必填
+        { field: 'sex', name: '性别'},
+        // age大于15
+        { field: 'age', name: '年龄', rules: {'>': 15}},
+        // isStudent必填，可传递提示语
+        { field: 'isStudent', name: '是否是学生', tip: '是否是学生是必填项'},
+        // 当isStudent==1时才会去校验job字段
+        { field: 'job', name: '工作', need: [{field: 'isStudent', rules: {'===': 1}}]}
+    ]
+    const r = Validator.validate(formData, formDataRules);
+    console.log(r.res, r.msg);       // false sex is error
+
+    // 新增自定义校验器
+    Validator.addRule('isInArray', (value) => {
+        return [1,2,3,4,5,6,7,8,9,0].indexOf(value);
+    })
+    const ohterRules = [
+      { field: 'name', name: '姓名', need: [{ field: 'test', rules: 'isInArray'}]}
+    ]
+    const r2 = Validator.validate({name: ''}, ohterRules);
+    console.log(r2.res, r2.msg);       // false name is error
+    
+    const r3 = Validator.validate({name: '王花花'}, ohterRules);
+    console.log(r3.res, r3.msg);       // true success
   </script>
 </body>
 </html>

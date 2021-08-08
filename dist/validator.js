@@ -86,7 +86,7 @@
 
     if(typeof x !== 'object'
       || x === null
-      || y !== 'object'
+      || typeof y !== 'object'
       || y === null){
         return false;
     }
@@ -257,15 +257,10 @@
       case '>=': return value >= signVal;
       case '<': return value < signVal;
       case '<=': return value <= signVal;
-      // todo 考虑优化一下 == 和 === 的判断逻辑
       case '==': return value == signVal;
-      default: {
-        if(typeof value === 'object' && !Array.isArray(value)){
-          return value === signVal;
-        }else {
-          return isEqual(value, signVal);
-        }
-      }  }
+      // === 可以区分NaN、+0、-0，无法深度比较对象
+      default: return isEqual(value, signVal);
+    }
   }
 
   function validRuleByArray(needValue, needRules){
@@ -338,7 +333,9 @@
               res: false,
               msg
             }
-          } else {
+          } 
+
+          if(i === ruleArr.length - 1){
             return {
               res: true,
               msg: 'success'

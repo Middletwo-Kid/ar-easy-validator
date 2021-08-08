@@ -1,22 +1,5 @@
 import validator from '../src/index';
 
-// rule = [
-//   { field: 'name' },
-//   { field: 'name', rules: 'isRequired'},
-//   { field: 'name', rules: 'isName'},
-
-//   { field: 'age', rules: 'isAge'},
-//   { field: 'age', rules: {'>' : 18}},
-//   { field: 'age', rules: {'>=' : 18}},
-//   { field: 'age', rules: {'==' : 18}},
-//   { field: 'age', rules: {'===' : 18}},
-//   { field: 'age', rules: {'<=' : 18}},
-//   { field: 'age', rules: {'<' : 18}},
-
-//   { field: 'content', rules: { '<=' : 10 } },
-//   { field: 'options', rules: { '<=' : 3 } },
-// ]
-
 describe('test parameter', () => {
   it('参数values不是object', () => {
     expect(validator.validate(undefined, undefined)).toEqual({msg: "failure", res: false});
@@ -120,7 +103,25 @@ describe('test object rules', () => {
     expect(validator.validate({age: '17'}, [{field: 'age', rules: {'<': 18}}])).toEqual({msg: "success", res: true});
   });
 
-  // todo 考虑优化一下 == 和 === 的判断逻辑
+  it('比较NaN', () => {
+    expect(validator.validate({test: NaN}, [{field: 'test', rules: {'===': NaN}}])).toEqual({msg: "success", res: true});
+  });
+
+  it('比较+0和0', () => {
+    expect(validator.validate({test: +0}, [{field: 'test', rules: {'===': -0}}])).toEqual({msg: "test is error", res: false});
+  });
+
+  it('比较两个对象', () => {
+    expect(validator.validate({obj: {a: 1, b: 2}}, [{field: 'obj', rules: {'===': {a: 1, b: 2}}}])).toEqual({msg: "success", res: true});
+  });
+
+  it('比较两个对象', () => {
+    expect(validator.validate({obj: {a: 1, b: 2}}, [{field: 'obj', rules: {'===': {a: 1, b: 2, c: 3}}}])).toEqual({msg: "obj is error", res: false});
+  });
+
+  it('比较两个对象', () => {
+    expect(validator.validate({obj: {a: 1, b: 2}}, [{field: 'obj', rules: {'===': {a: 1, b: 3}}}])).toEqual({msg: "obj is error", res: false});
+  });
 })
 
 describe('test array rules', () => {
@@ -176,5 +177,74 @@ describe('test tip', () => {
 
   it('rules中的tip是字符串', () => {
     expect(validator.validate({age: ''}, [{field: 'age', tip: '年龄必填'}])).toEqual({msg: "年龄必填", res: false});
+  });
+})
+
+describe('test addRule', () => {
+  it('新增rule规则, key为对象', () => {
+    validator.addRule({}, () => {});
+    expect(validator.validate({age: 18}, [{field: 'age', rules: {}}])).toEqual({msg: "failure", res: false});
+  });
+
+  it('新增rule规则, key为validate', () => {
+    validator.addRule('validate', () => {});
+    expect(validator.validate({age: 18}, [{field: 'age', rules: 'validate'}])).toEqual({msg: "failure", res: false});
+  });
+
+  it('新增rule规则, key为addRule', () => {
+    validator.addRule('addRule', () => {});
+    expect(validator.validate({age: 18}, [{field: 'age', rules: 'addRule'}])).toEqual({msg: "failure", res: false});
+  });
+
+  it('新增rule规则, key为字符串，cb为非函数', () => {
+    validator.addRule('testArrayLength1', null);
+    expect(validator.validate({arr: [1,2,3]}, [{field: 'arr', rules: 'testArrayLength1'}])).toEqual({msg: "failure", res: false});
+  });
+
+  it('新增rule规则, key为字符串，cb为函数', () => {
+    validator.addRule('testArrayLength2', function(value){
+      return value && value.length > 2 && value.length < 4;
+    });
+    const rules = [{ field: 'arr', rules: 'testArrayLength2'}];
+    expect(validator.validate({ arr: [1, 2, 3, 4]}, rules)).toEqual({msg: "arr is error", res: false});
+    expect(validator.validate({ arr: [1, 2, 3]}, rules)).toEqual({msg: "success", res: true});
+  });
+})
+
+describe('test complete case', () => {
+  const formData = {
+    name: '姓名',
+    sex: '',
+    age: 18,
+    isStudent: 0,
+    job: ''
+  };
+  const formDataRules = [
+    // name必须符合名字规则
+    { field: 'name', name: '姓名', rules: 'isName'},
+    // sex必填
+    { field: 'sex', name: '性别'},
+    // age大于15
+    { field: 'age', name: '年龄', rules: {'>': 15}},
+    // isStudent必填，可传递提示语
+    { field: 'isStudent', name: '是否是学生', tip: '是否是学生是必填项'},
+    // 当isStudent==1时才会去校验job字段
+    { field: 'job', name: '工作', need: [{field: 'isStudent', rules: {'===': 1}}]}
+  ]
+
+  it('sex is error', () => {
+    expect(validator.validate(formData, formDataRules)).toEqual({msg: "sex is error", res: false});
+  });
+
+  const formData2 = {
+    name: '姓名',
+    sex: '女',
+    age: 18,
+    isStudent: 0,
+    job: ''
+  };
+
+  it('formData2 is correct', () => {
+    expect(validator.validate(formData2, formDataRules)).toEqual({msg: "success", res: true});
   });
 })
