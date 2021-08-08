@@ -6,7 +6,8 @@
   "types": "/type/index.d.ts",
   "files": [
     "dist",
-    "READMD.md"
+    "READMD.md",
+    "type"
   ],
   "scripts": {
     "dev": "rollup -c -w",
