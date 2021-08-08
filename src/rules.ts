@@ -1,6 +1,11 @@
 import { CITY } from './constanst';
 
-const regex = {
+export type RegexKey = 'is_email' | 'is_mobile' | 'is_concat' | 'is_name' | 'is_number'
+                | 'is_bankcard' | 'is_age' | 'is_money' | 'is_positive_int' 
+                | 'is_chinese' | 'is_english' | 'is_url' | 'is_id';
+export type Regex = { [K in RegexKey]: RegExp };
+
+const regex: Regex = {
   is_email: /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/,
   is_mobile: /^1[3456789][0-9]{9}$/,
   is_concat: /(^(\d{3,4}-)?\d{6,8}$)|(^1[3456789][0-9]{9}$)/,
@@ -16,7 +21,7 @@ const regex = {
   is_id: /^\d{6}(18|19|20)?\d{2}(0[1-9]|1[012])(0[1-9]|[12]\d|3[01])\d{3}(\d|[xX])$/
 }
 
-const isEmpty = (val) => {
+const isEmpty = (val: any) => {
   const type = typeof val;
 
   if((type === 'undefined')
@@ -28,7 +33,7 @@ const isEmpty = (val) => {
   return false;
 }
 
-const is = (x, y) => {
+const is = (x: any, y: any) => {
   // 要区分0、 +0、-0和NaN的情况
   if(x === y){
     return x !== 0 || y !== 0 || 1 / x === 1 / y;
@@ -37,7 +42,7 @@ const is = (x, y) => {
   }
 }
 
-export const isEqual = (x, y) => {
+export const isEqual = (x: any, y: any) => {
   if(is(x, y)) return true;
 
   if(typeof x !== 'object'
@@ -64,21 +69,21 @@ export const isEqual = (x, y) => {
   return true;
 }
 
-const isRequired = (val) => !isEmpty(val);
-const isEmail = (val) => regex.is_email.test(val);
-const isMobile = (val) => regex.is_mobile.test(val);
-const isConcat = (val) => regex.is_concat.test(val);
-const isWx = (val) => regex.is_mobile.test(val) || /^[a-zA-Z][a-zA-Z\d_-]{5,19}$/.test(val);
-const isName = (val) => regex.is_name.test(val);
-const isNumber = (val) => regex.is_number.test(val);
-const isPositiveInt = (val) => regex.is_positive_int.test(val);
-const isBankcard = (val) => regex.is_bankcard.test(val);
-const isAge = (val) => regex.is_age.test(val);
-const isMoney = (val) => regex.is_money.test(val);
-const isChinese = (val) => regex.is_chinese.test(val);
-const isEnglish = (val) => isRequired(val) && regex.is_english.test(val);
-const isUrl = (val) => regex.is_url.test(val);
-const isIdcard = (code) => {
+const isRequired = (val: any) => !isEmpty(val);
+const isEmail = (val: any) => regex.is_email.test(val);
+const isMobile = (val: any) => regex.is_mobile.test(val);
+const isConcat = (val: any) => regex.is_concat.test(val);
+const isWx = (val: any) => regex.is_mobile.test(val) || /^[a-zA-Z][a-zA-Z\d_-]{5,19}$/.test(val);
+const isName = (val: any) => regex.is_name.test(val);
+const isNumber = (val: any) => regex.is_number.test(val);
+const isPositiveInt = (val: any) => regex.is_positive_int.test(val);
+const isBankcard = (val: any) => regex.is_bankcard.test(val);
+const isAge = (val: any) => regex.is_age.test(val);
+const isMoney = (val: any) => regex.is_money.test(val);
+const isChinese = (val: any) => regex.is_chinese.test(val);
+const isEnglish = (val: any) => isRequired(val) && regex.is_english.test(val);
+const isUrl = (val: any) => regex.is_url.test(val);
+const isIdcard = (code: any) => {
   const city = CITY;
   let pass = true;
 

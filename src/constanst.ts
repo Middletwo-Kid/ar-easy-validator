@@ -1,4 +1,6 @@
-export const CITY ={
+export type SignType =  '>' | '<' | '>=' | '<=' | '==' | '===';
+
+export const CITY: {[key: string]: string} ={
   11: '北京',
   12: '天津',
   13: '河北',
@@ -36,4 +38,4 @@ export const CITY ={
   91: '国外 '
 };
 
-export const SIGN = [ '>', '<', '>=', '<=', '==', '==='];
+export const SIGN: SignType[] = [ '>', '<', '>=', '<=', '==', '==='];
