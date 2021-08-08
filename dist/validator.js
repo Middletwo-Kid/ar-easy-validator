@@ -161,242 +161,227 @@
         isIdcard: isIdcard
     };
 
-    function _typeof(obj) {
-      "@babel/helpers - typeof";
-
-      if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-        _typeof = function (obj) {
-          return typeof obj;
-        };
-      } else {
-        _typeof = function (obj) {
-          return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-        };
-      }
-
-      return _typeof(obj);
-    }
-
     function checkIsObject(values) {
-      return _typeof(values) === 'object' && Object.prototype.toString.call(values) === '[object Object]';
+        return typeof values === 'object' && Object.prototype.toString.call(values) === '[object Object]';
     }
-
     function checkValidateParameter(values, rules) {
-      if (!values || !checkIsObject(values)) {
-        throw new Error("parameter values is invalid in validate, it should be an object");
-      } else if (!Array.isArray(rules)) {
-        throw new Error("parameter rules is invalid in validate, it should be an array");
-      }
-
-      return true;
+        if (!values || !checkIsObject(values)) {
+            throw new Error("parameter values is invalid in validate, it should be an object");
+        }
+        else if (!Array.isArray(rules)) {
+            throw new Error("parameter rules is invalid in validate, it should be an array");
+        }
+        return true;
     }
-
     function checkRuleParameter(field, rules, need, tip) {
-      if (!field || typeof field !== 'string') {
-        throw new Error("field is invaild in rules's item");
-      }
-
-      if (rules) {
-        isVaildRule.call(this, rules);
-      }
-
-      if (need && !Array.isArray(need)) {
-        throw new Error("need is invaild in rules's item");
-      }
-
-      if (tip && typeof tip !== 'string') {
-        throw new Error("tip is invaild in rules's item");
-      }
+        if (!field || typeof field !== 'string') {
+            throw new Error("field is invaild in rules's item");
+        }
+        if (rules) {
+            isVaildRule.call(this, rules);
+        }
+        if (need && !Array.isArray(need)) {
+            throw new Error("need is invaild in rules's item");
+        }
+        if (tip && typeof tip !== 'string') {
+            throw new Error("tip is invaild in rules's item");
+        }
     }
-
     function isVaildRule(rules) {
-      var type = _typeof(rules);
-
-      if (type !== 'string' && !checkIsObject(rules) && !Array.isArray(rules)) {
-        throw new Error("rules should be string or object or array");
-      } else if (type === 'string' && (rules === 'validate' || rules === 'addRule' || !this.hasOwnProperty(rules))) {
-        throw new Error("rules doesn't exist");
-      } else if (type === 'object' && !Array.isArray(rules)) {
-        var keys = Object.keys(rules);
-
-        if (keys.length === 0 || keys.length > 1) {
-          throw new Error("rules is invaild");
-        } else if (!SIGN.includes(keys[0])) {
-          throw new Error("when rules is an object, rules'key should be on of [ ".concat(SIGN.join(', '), " ]"));
+        var type = typeof rules;
+        if (type !== 'string'
+            && !checkIsObject(rules)
+            && !Array.isArray(rules)) {
+            throw new Error("rules should be string or object or array");
+            // @ts-ignore
         }
-      } else if (Array.isArray(rules) && rules.length > 0) {
-        for (var i = 0; i < rules.length; i++) {
-          var rule = rules[i]; // check the rule of rules, but omitting the array
-
-          if (typeof rule === 'string' || checkIsObject(rule)) {
-            isVaildRule.call(this, rule);
-          } else {
-            throw new Error("when rules is an array, it' children should be string or an object");
-          }
+        else if (type === 'string' && ((rules === 'validate' || rules === 'addRule') || !this.hasOwnProperty(rules))) {
+            throw new Error("rules doesn't exist");
         }
-      }
+        else if (type === 'object' && !Array.isArray(rules)) {
+            var keys = Object.keys(rules);
+            if (keys.length === 0 || keys.length > 1) {
+                throw new Error("rules is invaild");
+            }
+            var key = keys[0];
+            if (!SIGN.includes(key)) {
+                throw new Error("when rules is an object, rules'key should be on of [ " + SIGN.join(', ') + " ]");
+            }
+        }
+        else if (Array.isArray(rules) && rules.length > 0) {
+            for (var i = 0; i < rules.length; i++) {
+                var rule = rules[i];
+                // check the rule of rules, but omitting the array
+                if (typeof rule === 'string' || checkIsObject(rule)) {
+                    isVaildRule.call(this, rule);
+                }
+                else {
+                    throw new Error("when rules is an array, it' children should be string or an object");
+                }
+            }
+        }
     }
-
     function vaild(value, rules) {
-      var type = _typeof(rules);
-
-      if (type === 'string') {
-        return validRuleByString.call(this, value, rules);
-      } else if (Array.isArray(rules)) {
-        return validRuleByArray.call(this, value, rules);
-      } else {
-        var key = Object.keys(rules)[0];
-        var keyVal = rules[key];
-        return validRuleByObject(value, key, keyVal);
-      }
-    }
-
-    function validRuleByString(value, rule) {
-      return this[rule](value);
-    }
-
-    function validRuleByObject(value, sign, signVal) {
-      switch (sign) {
-        case '>':
-          return value > signVal;
-
-        case '>=':
-          return value >= signVal;
-
-        case '<':
-          return value < signVal;
-
-        case '<=':
-          return value <= signVal;
-
-        case '==':
-          return value == signVal;
-        // === 可以区分NaN、+0、-0，无法深度比较对象
-
-        default:
-          return isEqual(value, signVal);
-      }
-    }
-
-    function validRuleByArray(needValue, needRules) {
-      var shouldCheck = true;
-
-      for (var i = 0; i < needRules.length; i++) {
-        var rule = needRules[i];
-
-        var type = _typeof(rule);
-
+        var type = typeof rules;
         if (type === 'string') {
-          shouldCheck = validRuleByString.call(this, needValue, rule);
-        } else if (type === 'object' && !Array.isArray(rule)) {
-          var key = Object.keys(rule)[0];
-          var keyVal = rule[key];
-          shouldCheck = validRuleByObject(needValue, key, keyVal);
+            var stringRules = rules;
+            return validRuleByString.call(this, value, stringRules);
         }
-
-        if (!shouldCheck) return false;
-      }
-
-      return true;
+        else if (Array.isArray(rules)) {
+            return validRuleByArray.call(this, value, rules);
+        }
+        else {
+            var currentRules = rules;
+            var keys = Object.keys(rules);
+            var key = keys[0];
+            var keyVal = currentRules[key];
+            return validRuleByObject(value, key, keyVal);
+        }
     }
-
+    function validRuleByString(value, rule) {
+        return this[rule](value);
+    }
+    function validRuleByObject(value, sign, signVal) {
+        switch (sign) {
+            case '>': return value > signVal;
+            case '>=': return value >= signVal;
+            case '<': return value < signVal;
+            case '<=': return value <= signVal;
+            case '==': return value == signVal;
+            // === 可以区分NaN、+0、-0，无法深度比较对象
+            default: return isEqual(value, signVal);
+        }
+    }
+    function validRuleByArray(needValue, needRules) {
+        var shouldCheck = true;
+        for (var i = 0; i < needRules.length; i++) {
+            var rule = needRules[i];
+            var type = typeof rule;
+            if (type === 'string') {
+                var stringKey = rule;
+                shouldCheck = validRuleByString.call(this, needValue, stringKey);
+            }
+            else if (type === 'object' && !Array.isArray(rule)) {
+                var currentRule = rule;
+                var key = Object.keys(rule)[0];
+                var keyVal = currentRule[key];
+                shouldCheck = validRuleByObject(needValue, key, keyVal);
+            }
+            if (!shouldCheck)
+                return false;
+        }
+        return true;
+    }
     function checkValue(values, currentValue, currentRules, need) {
-      var shouldCheck = true;
-
-      if (need && need.length > 0) {
-        for (var i = 0; i < need.length; i++) {
-          var needRule = need[i];
-
-          if (!needRule.hasOwnProperty('field')) {
-            throw new Error("field isn't exist");
-          }
-
-          var field = needRule.field,
-              rules = needRule.rules;
-          if (!rules) rules = 'isRequired';
-          checkRuleParameter.call(this, field, rules);
-
-          if (values.hasOwnProperty(field)) {
-            var needValue = values[field];
-            shouldCheck = vaild.call(this, needValue, rules);
-          }
+        var shouldCheck = true;
+        if (need && need.length > 0) {
+            for (var i = 0; i < need.length; i++) {
+                var needRule = need[i];
+                if (!needRule.hasOwnProperty('field')) {
+                    throw new Error("field isn't exist");
+                }
+                var field = needRule.field, rules = needRule.rules;
+                if (!rules)
+                    rules = 'isRequired';
+                checkRuleParameter.call(this, field, rules);
+                if (values.hasOwnProperty(field)) {
+                    var needValue = values[field];
+                    shouldCheck = vaild.call(this, needValue, rules);
+                }
+            }
         }
-      }
-
-      if (!shouldCheck) return true;
-      if (!currentRules) currentRules = 'isRequired';
-      return vaild.call(this, currentValue, currentRules);
+        if (!shouldCheck)
+            return true;
+        if (!currentRules)
+            currentRules = 'isRequired';
+        return vaild.call(this, currentValue, currentRules);
     }
-
     function validate(values, ruleArr) {
-      try {
-        checkValidateParameter(values, ruleArr);
-
-        for (var i = 0; i < ruleArr.length; i++) {
-          var rule = ruleArr[i];
-
-          if (!rule.hasOwnProperty('field')) {
-            throw new Error("field isn't exist");
-          }
-
-          var field = rule.field,
-              rules = rule.rules,
-              need = rule.need,
-              tip = rule.tip;
-          checkRuleParameter.call(this, field, rules, need, tip);
-
-          if (values.hasOwnProperty(field)) {
-            var flag = checkValue.call(this, values, values[field], rules, need);
-
-            if (!flag) {
-              var msg = tip ? tip : "".concat(field, " is error");
-              return {
+        try {
+            checkValidateParameter(values, ruleArr);
+            for (var i = 0; i < ruleArr.length; i++) {
+                var rule = ruleArr[i];
+                if (!rule.hasOwnProperty('field')) {
+                    throw new Error("field isn't exist");
+                }
+                var field = rule.field, rules = rule.rules, need = rule.need, tip = rule.tip;
+                checkRuleParameter.call(this, field, rules, need, tip);
+                if (values.hasOwnProperty(field)) {
+                    var flag = checkValue.call(this, values, values[field], rules, need);
+                    if (!flag) {
+                        var msg = tip ? tip : field + " is error";
+                        return {
+                            res: false,
+                            msg: msg
+                        };
+                    }
+                    if (i === ruleArr.length - 1) {
+                        return {
+                            res: true,
+                            msg: 'success'
+                        };
+                    }
+                }
+            }
+        }
+        catch (error) {
+            console.error(error);
+            return {
                 res: false,
-                msg: msg
-              };
-            }
-
-            if (i === ruleArr.length - 1) {
-              return {
-                res: true,
-                msg: 'success'
-              };
-            }
-          }
+                msg: 'failure'
+            };
         }
-      } catch (error) {
-        console.error(error);
-        return {
-          res: false,
-          msg: 'failure'
-        };
-      }
     }
 
-    function Validator() {
-      var _this = this;
-
-      // add rules
-      Object.keys(rules).forEach(function (key) {
-        _this[key] = rules[key];
-      });
-      this.validate = validate.bind(this);
-    }
-
-    Validator.prototype.addRule = function (key, cb) {
-      try {
-        if (!key || typeof key !== 'string' || key === 'validate' || key === 'addRule') {
-          throw new Error("parameter \"key\" is invaild in addRule, \n        it should be string, and not allow be named 'validate' or 'addRule'. ");
-        } else if (!cb || typeof cb !== 'function') {
-          throw new Error("parameter \"cb\" is invaild in addRule, it should be a function. ");
-        } else {
-          this[key] = cb;
+    var Validator = /** @class */ (function () {
+        function Validator() {
+            var _this = this;
+            // add rules
+            // const keys: RuelsKey[] = Object.keys(rules) as RuelsKey[];
+            // keys.forEach((key: RuelsKey) => {
+            //   key = key as RuelsKey;
+            //   this[key] = rules[key];
+            // })
+            this.isRequired = rules['isRequired'];
+            this.isEmpty = rules['isEmpty'];
+            this.isEqual = rules['isEqual'];
+            this.isEmail = rules['isEmail'];
+            this.isMobile = rules['isMobile'];
+            this.isConcat = rules['isConcat'];
+            this.isWx = rules['isWx'];
+            this.isName = rules['isName'];
+            this.isNumber = rules['isNumber'];
+            this.isPositiveInt = rules['isPositiveInt'];
+            this.isBankcard = rules['isBankcard'];
+            this.isAge = rules['isAge'];
+            this.isMoney = rules['isMoney'];
+            this.isChinese = rules['isChinese'];
+            this.isEnglish = rules['isEnglish'];
+            this.isUrl = rules['isUrl'];
+            this.isIdcard = rules['isIdcard'];
+            this.validate = validate;
+            this.addRule = function (key, cb) {
+                try {
+                    if (!key
+                        || typeof key !== 'string'
+                        || key === 'validate' || key === 'addRule') {
+                        throw new Error("parameter \"key\" is invaild in addRule, \n            it should be string, and not allow be named 'validate' or 'addRule'. ");
+                    }
+                    else if (!cb || typeof cb !== 'function') {
+                        throw new Error("parameter \"cb\" is invaild in addRule, it should be a function. ");
+                    }
+                    else {
+                        // @ts-ignore
+                        _this[key] = cb;
+                    }
+                }
+                catch (error) {
+                    console.error(error);
+                }
+            };
         }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
+        return Validator;
+    }());
     var validator = new Validator();
 
     return validator;

@@ -1,11 +1,28 @@
-import { SIGN } from './constanst';
-import { isEqual } from './rules';
+import { SIGN, SignType } from './constanst';
+import { isEqual, RuelsKey } from './rules';
 
-function checkIsObject(values) {
+export type StringRule = RuelsKey;
+export type ObjectRule = { [key in SignType]: any };
+export type ArrRule = Array<StringRule | ObjectRule>;
+export type SinleRule = StringRule | ObjectRule | ArrRule;
+
+export interface needRules {
+  field: string,
+  rules?: StringRule | ObjectRule,
+}
+
+export interface Rules {
+  field: string,
+  rules?: SinleRule,
+  need?: needRules[],
+  tip?: string
+}
+
+function checkIsObject(values: any) {
   return typeof values === 'object' && Object.prototype.toString.call(values) === '[object Object]';
 }
 
-function checkValidateParameter(values, rules){
+function checkValidateParameter(values: {[key: string]: any}, rules: Rules[]){
   if(!values || !checkIsObject(values)){
     throw new Error(`parameter values is invalid in validate, it should be an object`);
   }else if(!Array.isArray(rules)){
@@ -14,7 +31,7 @@ function checkValidateParameter(values, rules){
   return true;
 }
 
-function checkRuleParameter(field, rules, need, tip){
+function checkRuleParameter(this: any, field: string, rules?: SinleRule, need?: needRules[], tip?: string){
   if(!field || typeof field !== 'string'){
     throw new Error(`field is invaild in rules's item`);
   }
@@ -32,20 +49,23 @@ function checkRuleParameter(field, rules, need, tip){
   }
 }
 
-function isVaildRule(rules){
+function isVaildRule(this: any, rules: SinleRule){
   const type = typeof rules;
 
   if(type !== 'string' 
     && !checkIsObject(rules) 
     && !Array.isArray(rules)){
     throw new Error(`rules should be string or object or array`);
+    // @ts-ignore
   } else if(type === 'string' && ((rules === 'validate' || rules === 'addRule') || !this.hasOwnProperty(rules))){
     throw new Error(`rules doesn't exist`);
   } else if(type === 'object' && !Array.isArray(rules)){
     const keys = Object.keys(rules);
     if(keys.length === 0 || keys.length > 1){
       throw new Error(`rules is invaild`);
-    } else if(!SIGN.includes(keys[0])){
+    }
+    const key = keys[0] as SignType;
+    if(!SIGN.includes(key)){
       throw new Error(`when rules is an object, rules'key should be on of [ ${SIGN.join(', ')} ]`);
     }
   } else if(Array.isArray(rules) && rules.length > 0){
@@ -62,25 +82,28 @@ function isVaildRule(rules){
   }
 }
 
-function vaild(value, rules){
+function vaild(this: any, value: any, rules: SinleRule){
   const type = typeof rules;
 
   if(type === 'string'){
-    return validRuleByString.call(this, value, rules);
+    const stringRules = rules as StringRule;
+    return validRuleByString.call(this, value, stringRules);
   }else if(Array.isArray(rules)){
     return validRuleByArray.call(this, value, rules);
   }else {
-    const key = Object.keys(rules)[0];
-    const keyVal = rules[key];
+    const currentRules = rules as ObjectRule;
+    const keys = Object.keys(rules);
+    const key = keys[0] as SignType;
+    const keyVal = currentRules[key];
     return validRuleByObject(value, key, keyVal);
   }
 }
 
-function validRuleByString(value, rule){
+function validRuleByString(this: any, value: any, rule: string){
   return this[rule](value);
 }
 
-function validRuleByObject(value, sign, signVal){  
+function validRuleByObject(value: any, sign: SignType, signVal: any){  
   switch(sign){
     case '>': return value > signVal;
     case '>=': return value >= signVal;
@@ -92,7 +115,7 @@ function validRuleByObject(value, sign, signVal){
   }
 }
 
-function validRuleByArray(needValue, needRules){
+function validRuleByArray(this: any, needValue: any, needRules: Array<StringRule | ObjectRule>){
   let shouldCheck = true;
 
   for(let i = 0; i < needRules.length; i++){
@@ -100,10 +123,12 @@ function validRuleByArray(needValue, needRules){
     const type = typeof rule;
     
     if(type === 'string'){
-      shouldCheck = validRuleByString.call(this, needValue, rule);
+      const stringKey = rule as StringRule;
+      shouldCheck = validRuleByString.call(this, needValue, stringKey);
     }else if(type === 'object' && !Array.isArray(rule)){
-      const key = Object.keys(rule)[0];
-      const keyVal = rule[key];
+      const currentRule = rule as ObjectRule;
+      const key = Object.keys(rule)[0] as SignType;
+      const keyVal = currentRule[key];
       shouldCheck = validRuleByObject(needValue, key, keyVal);
     }
 
@@ -113,7 +138,7 @@ function validRuleByArray(needValue, needRules){
   return true;
 }
 
-function checkValue(values, currentValue, currentRules, need){
+function checkValue(this: any, values: {[key:string]: any}, currentValue: any, currentRules?: SinleRule, need?: needRules[]){
   let shouldCheck = true;
 
   if(need && need.length > 0){
@@ -140,7 +165,7 @@ function checkValue(values, currentValue, currentRules, need){
   return vaild.call(this, currentValue, currentRules);
 }
 
-function validate(values, ruleArr){
+function validate(this: any, values: {[key: string]: any}, ruleArr: Rules[]){
   try {
     checkValidateParameter(values, ruleArr);
 

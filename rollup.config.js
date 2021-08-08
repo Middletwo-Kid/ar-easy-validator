@@ -36,7 +36,7 @@ const output = [{
 }]
 
 export default {
-  input: resolve('src/index.js'),
+  input: resolve('src/index.ts'),
   output: [
     ...output,
     ...output.map(type => {
