@@ -1,15 +1,16 @@
 {
   "name": "ar-easy-validator",
-  "version": "2.0.0",
+  "version": "4.0.0",
   "description": "轻量级校验器",
   "main": "./dist/validator.min.js",
+  "types": "/type/index.d.ts",
   "files": [
     "dist",
     "READMD.md"
   ],
   "scripts": {
     "dev": "rollup -c -w",
-    "build": "rollup -c",
+    "build": "npm run test && rollup -c",
     "prepare": "husky install",
     "test": "jest --coverage"
   },
