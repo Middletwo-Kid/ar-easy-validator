@@ -5,6 +5,12 @@ export type RegexKey = 'is_email' | 'is_mobile' | 'is_concat' | 'is_name' | 'is_
                 | 'is_chinese' | 'is_english' | 'is_url' | 'is_id';
 export type Regex = { [K in RegexKey]: RegExp };
 
+export type RuelsKey = 'isRequired' | 'isEmail' | 'isMobile' | 'isConcat' | 'isWx'
+                | 'isName' | 'isNumber' | 'isPositiveInt' | 'isBankcard' 
+                | 'isAge' | 'isMoney' | 'isChinese' | 'isEnglish' | 'isUrl'
+                | 'isIdcard' | 'isEmpty' | 'isEqual';
+export type Rules = { [K in RuelsKey]: (val: any, secondVal?: any) => boolean };
+
 const regex: Regex = {
   is_email: /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/,
   is_mobile: /^1[3456789][0-9]{9}$/,
@@ -113,7 +119,7 @@ const isIdcard = (code: any) => {
   }
 };
 
-export default {
+const rules: Rules = {
   isRequired,
   isEmpty,
   isEqual,
@@ -131,4 +137,6 @@ export default {
   isEnglish,
   isUrl,
   isIdcard
-};
+}
+
+export default rules;
