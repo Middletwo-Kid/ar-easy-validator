@@ -8,6 +8,7 @@
     "READMD.md"
   ],
   "scripts": {
+    "dev": "rollup -c -w",
     "build": "rollup -c",
     "prepare": "husky install",
     "test": "jest --coverage"
