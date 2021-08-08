@@ -2,6 +2,7 @@ import pkg from './package.json';
 const path = require('path');
 import { cloneDeep  } from 'lodash';
 import { terser } from "rollup-plugin-terser";
+import { babel } from '@rollup/plugin-babel';
 
 const resolve = (dir) => {
   return path.join(__dirname, dir)
@@ -43,5 +44,8 @@ export default {
     return;
   }
     console.error(warning.message);
-  }
+  },
+  plugins: [
+    babel({ babelHelpers: 'bundled' })
+  ]
 }
